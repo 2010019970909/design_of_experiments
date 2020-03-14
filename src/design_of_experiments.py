@@ -340,35 +340,9 @@ def plot_henry(coefficents, coefficents_labels=None, empirical_cumulative_distri
     # Corresponding quantile (normit) z(i)
     normits = erfinv(2*dist - 1) * np.sqrt(2)
 
-    print(coefficents)
-    print(labels)
-    print(dist)
-    print(normits)
-
     fig, ax = plt.subplots()
     ax.plot(coefficents, normits, marker='1',
             linestyle='--', linewidth=0.5, **kwargs)
-
-    """
-    i = 0
-
-    for rect in rects:
-        x = rect.get_width()
-
-        va = 'center'
-
-        if i == 0:
-            xytext = (-4*len(str(x)), 0)
-        else:
-            xytext = (4*len(str(x)), 0)
-
-        ax.annotate('{}'.format(x),
-                    xy=(x, i),
-                    xytext=xytext,  # 3 points vertical offset
-                    textcoords="offset points",
-                    ha='center', va=va)
-        i += 1
-    """
 
     ax.set_title(title)
     ax.set_yticks(normits)
