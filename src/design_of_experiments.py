@@ -39,7 +39,7 @@ def gen_design(n: int = 2, perm=None):
 
 def gen_X(n: int = 2, perm=None, show: bool = False, return_head: bool = False):
     """
-    Generate the X matrix to compute the coefficents.
+    Generate the X matrix to compute the a_i coefficents for a 2**n DoE.
 
     n: 
     The number of factors to analyse
@@ -49,6 +49,7 @@ def gen_X(n: int = 2, perm=None, show: bool = False, return_head: bool = False):
 
     show: 
     If True print the head and the matrix X and return (X, head)
+
     Else only return X
 
     return_head: 
@@ -123,6 +124,7 @@ def gen_X_hat(n: int = 2, perm=None, show: bool = False):
 
     show:
     If True print the head, the matrix X and X_hat
+
     Else only return X_hat
     """
     if show:
