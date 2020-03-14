@@ -6,7 +6,7 @@ __author__ = "Vincent STRAGIER"
 
 # Maths modules
 from itertools import permutations, combinations
-# import pandas as pd
+from scipy.special import erfinv
 import numpy as np
 
 # Plotting module
@@ -142,7 +142,28 @@ def gen_X_hat(n: int = 2, perm=None, show: bool = False):
 
 def plot_coefficents(coefficents, coefficents_labels=None, title: str = "Coefficients bar chart", legend: str = "Coefficients", block: bool = False, show: bool = False, **kwargs):
     """
-    Plot the bar chart of the coefficients
+    Plot the bar chart of the coefficients a_i.
+
+    coefficents:
+    A list or an array with the coefficients.
+
+    coefficents_labels:
+    A list or an array with the labels of the coefficient.
+
+    title:
+    The title of the chart.
+
+    legend:
+    Legend to display on the chart.
+
+    block:
+    Defines if the plot should block or no the execution of the code.
+
+    show:
+    Defines if the figure has to be displayed or no.
+
+    **kwargs:
+    Others optional arguments for the plot function (like the color, etc)
     """
     # https://matplotlib.org/3.1.1/gallery/lines_bars_and_markers/barchart.html
     x = np.arange(len(coefficents))
@@ -177,15 +198,38 @@ def plot_coefficents(coefficents, coefficents_labels=None, title: str = "Coeffic
     # ax.grid(which='major')
     ax.legend([legend])
     fig.tight_layout()
-    plt.show(block=block)
+    if show:
+        plt.show(block=block)
 
     return fig
 
 
 def plot_pareto(coefficents, coefficents_labels=None, title: str = "Pareto bar chart", legend: str = "| Coefficients |", block: bool = False, show: bool = False, **kwargs):
     """
-    Plot the Pareto bar chart of the coefficients
+    Plot the Pareto's bar chart of the coefficients a_i.
+
+    coefficents:
+    A list or an array with the coefficients.
+
+    coefficents_labels:
+    A list or an array with the labels of the coefficient.
+
+    title:
+    The title of the chart.
+
+    legend:
+    Legend to display on the chart.
+
+    block:
+    Defines if the plot should block or no the execution of the code.
+
+    show:
+    Defines if the figure has to be displayed or no.
+
+    **kwargs:
+    Others optional argumentd for the plot function (like the color, etc).
     """
+
     # https://matplotlib.org/3.1.1/gallery/lines_bars_and_markers/barchart.html
     l = len(coefficents)
     y = np.arange(l)
@@ -236,6 +280,107 @@ def plot_pareto(coefficents, coefficents_labels=None, title: str = "Pareto bar c
     return fig
 
 
+def plot_henry(coefficents, coefficents_labels=None, empirical_cumulative_distribution: str = "classical", a: float = 0, title: str = "Henry bar chart", legend: str = "| Coefficients |", block: bool = False, show: bool = False, **kwargs):
+    """
+    Plot the Henry's chart of the coefficients a_i.
+
+    coefficents:
+    A list or an array with the coefficients.
+
+    coefficents_labels:
+    A list or an array with the labels of the coefficient.
+
+    empirical_cumulative_distribution:
+
+    classical - f(i) = i/N
+
+    modified - f(i) = (i + a)/(N + 1 + 2a)
+
+    title:
+    The title of the chart.
+
+    legend:
+    Legend to display on the chart.
+
+    block:
+    Defines if the plot should block or no the execution of the code.
+
+    show:
+    Defines if the figure has to be displayed or no.
+
+    **kwargs:
+    Others optional arguments for the plot function (like the color, etc).
+    """
+    l = len(coefficents)
+    n = int(np.log2(l))
+
+    if coefficents_labels:
+        labels = np.array(coefficents_labels, dtype=str)
+    else:
+        labels = np.array(gen_a_labels(n), dtype=str)
+
+    # https://stackoverflow.com/a/7851166
+    index = sorted(range(len(coefficents)),
+                   key=coefficents.__getitem__, reverse=False)
+    coefficents = coefficents[index]
+    labels = labels[index]
+
+    # Empirical cumulative distribution f(i)
+    dist = coefficents
+
+    if empirical_cumulative_distribution == "classical":
+        for i in range(l):
+            dist[i] = (i+1)/l
+    elif empirical_cumulative_distribution == "modified":
+        for i in range(l):
+            dist[i] = (i+1+a)/(l+1+2*a)
+    else:
+        print("Error: unknown empirical mode.")
+
+    # Corresponding quantile (normit) z(i)
+    normits = erfinv(2*dist - 1) * np.sqrt(2)
+
+    print(coefficents)
+    print(labels)
+    print(dist)
+    print(normits)
+
+    fig, ax = plt.subplots()
+    ax.plot(coefficents, normits, marker='1',
+            linestyle='--', linewidth=0.5, **kwargs)
+
+    """
+    i = 0
+
+    for rect in rects:
+        x = rect.get_width()
+
+        va = 'center'
+
+        if i == 0:
+            xytext = (-4*len(str(x)), 0)
+        else:
+            xytext = (4*len(str(x)), 0)
+
+        ax.annotate('{}'.format(x),
+                    xy=(x, i),
+                    xytext=xytext,  # 3 points vertical offset
+                    textcoords="offset points",
+                    ha='center', va=va)
+        i += 1
+    """
+
+    ax.set_title(title)
+    ax.set_yticks(normits)
+    ax.set_yticklabels(labels)
+    ax.grid(which='major')
+    ax.legend([legend])
+    fig.tight_layout()
+    plt.show(block=block)
+
+    return fig
+
+
 def main():
     # Test 1
     y = np.array([77, 28.5, 141, 110, 161, 113, 220, 190])
@@ -248,7 +393,9 @@ def main():
     print("y_hat:", y_hat)
 
     plot_coefficents(a_hat, block=False, color="orange")
-    plot_pareto(a_hat, block=True, color="orange")
+    plot_pareto(a_hat, block=False, color="orange")
+    plot_henry(a_hat, empirical_cumulative_distribution="modified",
+               block=False, color="blue")
 
     print('Test 1:', y_hat == y, end="\n\n")
 
@@ -262,7 +409,9 @@ def main():
     a_hat_check = np.dot(gen_X_hat(n=2), y)
     print("a_hat_check", a_hat_check)
 
-    #plot_coefficents(a_hat, block=True, color="orange")
+    plot_coefficents(a_hat, block=False, color="orange")
+    plot_henry(a_hat, empirical_cumulative_distribution="modified",
+               block=True, color="blue")
 
     print('Test 2:', a_hat_check == a_hat, end="\n\n")
 
