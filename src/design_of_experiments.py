@@ -140,7 +140,71 @@ def gen_X_hat(n: int = 2, perm=None, show: bool = False):
     return X_hat
 
 
-def plot_coefficents(coefficents, coefficents_labels=None, title: str = "Coefficients bar chart", legend: str = "Coefficients", block: bool = False, show: bool = False, **kwargs):
+def draw_coefficents(mpl, coefficents, coefficents_labels=None, remove_a0: bool = False, title: str = "Coefficients bar chart", legend: str = "Coefficients", draw: bool = True, **kwargs):
+    """
+    Draw the bar chart of the coefficients a_i.
+
+    coefficents:
+    A list or an array with the coefficients.
+
+    coefficents_labels:
+    A list or an array with the labels of the coefficient.
+
+    title:
+    The title of the chart.
+
+    legend:
+    Legend to display on the chart.
+
+    draw:
+    Defines if the figure has to be displayed or no.
+
+    **kwargs:
+    Others optional arguments for the plot function (like the color, etc)
+    """
+    # https://matplotlib.org/3.1.1/gallery/lines_bars_and_markers/barchart.html
+    x = np.arange(len(coefficents))
+    n = int(np.log2(len(coefficents)))
+
+    if coefficents_labels:
+        labels = coefficents_labels
+    else:
+        labels = gen_a_labels(n)
+
+    if remove_a0:
+        coefficents = coefficents[1:]
+        labels = labels[1:]
+        x = np.arange(len(coefficents))
+
+    mpl.ax.clear()
+    rects = mpl.ax.bar(x, coefficents, **kwargs)
+
+    for rect in rects:
+        height = rect.get_height()
+        if height < 0:
+            va = 'top'
+            xytext = (0, -3)
+        else:
+            va = 'bottom'
+            xytext = (0, 3)
+
+        mpl.ax.annotate('{}'.format(height),
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=xytext,  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va=va)
+
+    mpl.ax.set_title(title)
+    mpl.ax.set_xticks(x)
+    mpl.ax.set_xticklabels(labels)
+    # mpl.ax.grid(which='major')
+    mpl.ax.legend([legend])
+    # mpl.tight_layout()
+    if draw:
+        mpl.draw()
+
+
+def plot_coefficents(coefficents, coefficents_labels=None, remove_a0: bool = False, title: str = "Coefficients bar chart", legend: str = "Coefficients", block: bool = False, show: bool = False, **kwargs):
     """
     Plot the bar chart of the coefficients a_i.
 
@@ -174,6 +238,11 @@ def plot_coefficents(coefficents, coefficents_labels=None, title: str = "Coeffic
     else:
         labels = gen_a_labels(n)
 
+    if remove_a0:
+        coefficents = coefficents[1:]
+        labels = labels[1:]
+        x = np.arange(len(coefficents))
+
     fig, ax = plt.subplots()
     rects = ax.bar(x, coefficents, **kwargs)
 
@@ -201,10 +270,87 @@ def plot_coefficents(coefficents, coefficents_labels=None, title: str = "Coeffic
     if show:
         plt.show(block=block)
 
-    return fig
+    return fig, ax
 
 
-def plot_pareto(coefficents, coefficents_labels=None, title: str = "Pareto bar chart", legend: str = "| Coefficients |", block: bool = False, show: bool = False, **kwargs):
+def draw_pareto(mpl, coefficents, coefficents_labels=None, remove_a0: bool = True, title: str = "Pareto bar chart", legend: str = "| Coefficients |", draw: bool = False, **kwargs):
+    """
+    Draw the Pareto's bar chart of the coefficients a_i.
+
+    coefficents:
+    A list or an array with the coefficients.
+
+    coefficents_labels:
+    A list or an array with the labels of the coefficient.
+
+    title:
+    The title of the chart.
+
+    legend:
+    Legend to display on the chart.
+
+    draw:
+    Defines if the figure has to be displayed or no.
+
+    **kwargs:
+    Others optional argumentd for the plot function (like the color, etc).
+    """
+
+    # https://matplotlib.org/3.1.1/gallery/lines_bars_and_markers/barchart.html
+    l = len(coefficents)
+    y = np.arange(l)
+    n = int(np.log2(l))
+    coefficents = np.abs(coefficents)
+
+    if coefficents_labels:
+        labels = np.array(coefficents_labels, dtype=str)
+    else:
+        labels = np.array(gen_a_labels(n), dtype=str)
+
+    if remove_a0:
+        coefficents = coefficents[1:]
+        labels = labels[1:]
+        y = np.arange(len(coefficents))
+
+    # https://stackoverflow.com/a/7851166
+    index = sorted(range(len(coefficents)),
+                   key=coefficents.__getitem__, reverse=True)
+    coefficents = coefficents[index]
+    labels = labels[index]
+
+    mpl.ax.clear()
+    rects = mpl.ax.barh(y, coefficents, **kwargs)
+
+    i = 0
+
+    for rect in rects:
+        x = rect.get_width()
+
+        va = 'center'
+
+        if i == 0:
+            xytext = (-4*len(str(x)), 0)
+        else:
+            xytext = (4*len(str(x)), 0)
+
+        mpl.ax.annotate('{}'.format(x),
+                        xy=(x, i),
+                        xytext=xytext,  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va=va)
+        i += 1
+
+    mpl.ax.set_title(title)
+    mpl.ax.set_yticks(y)
+    mpl.ax.set_yticklabels(labels)
+    # ax.grid(which='major')
+    mpl.ax.legend([legend])
+    # fig.tight_layout()
+    if draw:
+        mpl.draw()
+
+
+def plot_pareto(coefficents, coefficents_labels=None, remove_a0: bool = True, title: str = "Pareto bar chart", legend: str = "| Coefficients |", block: bool = False, show: bool = False, **kwargs):
     """
     Plot the Pareto's bar chart of the coefficients a_i.
 
@@ -241,6 +387,11 @@ def plot_pareto(coefficents, coefficents_labels=None, title: str = "Pareto bar c
     else:
         labels = np.array(gen_a_labels(n), dtype=str)
 
+    if remove_a0:
+        coefficents = coefficents[1:]
+        labels = labels[1:]
+        y = np.arange(len(coefficents))
+
     # https://stackoverflow.com/a/7851166
     index = sorted(range(len(coefficents)),
                    key=coefficents.__getitem__, reverse=True)
@@ -275,12 +426,89 @@ def plot_pareto(coefficents, coefficents_labels=None, title: str = "Pareto bar c
     # ax.grid(which='major')
     ax.legend([legend])
     fig.tight_layout()
-    plt.show(block=block)
+    if show:
+        plt.show(block=block)
 
-    return fig
+    return fig, ax
 
 
-def plot_henry(coefficents, coefficents_labels=None, empirical_cumulative_distribution: str = "classical", a: float = 0, title: str = "Henry bar chart", legend: str = "| Coefficients |", block: bool = False, show: bool = False, **kwargs):
+def draw_henry(mpl, coefficents, coefficents_labels=None, remove_a0: bool = True, empirical_cumulative_distribution: str = "classical", a: float = 0, title: str = "Henry bar chart", legend: str = "| Coefficients |", draw: bool = False, **kwargs):
+    """
+    Draw the Henry's chart of the coefficients a_i.
+
+    coefficents:
+    A list or an array with the coefficients.
+
+    coefficents_labels:
+    A list or an array with the labels of the coefficient.
+
+    empirical_cumulative_distribution:
+
+    classical - f(i) = i/N
+
+    modified - f(i) = (i + a)/(N + 1 + 2a)
+
+    title:
+    The title of the chart.
+
+    legend:
+    Legend to display on the chart.
+
+    draw:
+    Defines if the figure has to be displayed or no.
+
+    **kwargs:
+    Others optional arguments for the plot function (like the color, etc).
+    """
+    l = len(coefficents)
+    n = int(np.log2(l))
+
+    if coefficents_labels:
+        labels = np.array(coefficents_labels, dtype=str)
+    else:
+        labels = np.array(gen_a_labels(n), dtype=str)
+
+    if remove_a0:
+        coefficents = coefficents[1:]
+        labels = labels[1:]
+        l = len(coefficents)
+
+    # https://stackoverflow.com/a/7851166
+    index = sorted(range(len(coefficents)),
+                   key=coefficents.__getitem__, reverse=False)
+    coefficents = coefficents[index]
+    labels = labels[index]
+
+    # Empirical cumulative distribution f(i)
+    dist = coefficents
+
+    if empirical_cumulative_distribution == "classical":
+        for i in range(l):
+            dist[i] = (i+1)/l
+    elif empirical_cumulative_distribution == "modified":
+        for i in range(l):
+            dist[i] = (i+1+a)/(l+1+2*a)
+    else:
+        print("Error: unknown empirical mode.")
+
+    # Corresponding quantile (normit) z(i)
+    normits = erfinv(2*dist - 1) * np.sqrt(2)
+
+    mpl.ax.clear()
+    mpl.ax.plot(coefficents, normits, marker='1',
+                linestyle='--', linewidth=0.5, **kwargs)
+
+    mpl.ax.set_title(title)
+    mpl.ax.set_yticks(normits)
+    mpl.ax.set_yticklabels(labels)
+    mpl.ax.grid(which='major')
+    mpl.ax.legend([legend])
+    # Dfig.tight_layout()
+    if draw:
+        mpl.draw()
+
+
+def plot_henry(coefficents, coefficents_labels=None, remove_a0: bool = True, empirical_cumulative_distribution: str = "classical", a: float = 0, title: str = "Henry bar chart", legend: str = "| Coefficients |", block: bool = False, show: bool = False, **kwargs):
     """
     Plot the Henry's chart of the coefficients a_i.
 
@@ -319,6 +547,11 @@ def plot_henry(coefficents, coefficents_labels=None, empirical_cumulative_distri
     else:
         labels = np.array(gen_a_labels(n), dtype=str)
 
+    if remove_a0:
+        coefficents = coefficents[1:]
+        labels = labels[1:]
+        l = len(coefficents)
+
     # https://stackoverflow.com/a/7851166
     index = sorted(range(len(coefficents)),
                    key=coefficents.__getitem__, reverse=False)
@@ -350,9 +583,10 @@ def plot_henry(coefficents, coefficents_labels=None, empirical_cumulative_distri
     ax.grid(which='major')
     ax.legend([legend])
     fig.tight_layout()
-    plt.show(block=block)
+    if show:
+        plt.show(block=block)
 
-    return fig
+    return fig, ax
 
 
 def main():
