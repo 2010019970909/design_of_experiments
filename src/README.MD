@@ -1,4 +1,4 @@
-# Here is the code source for the project
+# Here is the source code for the project
 
 `GUI_doe.py` is the GUI for the Design of Experiments (DoE).
 
