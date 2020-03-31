@@ -20,9 +20,12 @@
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -53,7 +56,7 @@
              <enum>Qt::LeftToRight</enum>
             </property>
             <property name="text">
-             <string>Enter the number of parameters (0≤):</string>
+             <string>Enter the number of parameters (1≤):</string>
             </property>
             <property name="scaledContents">
              <bool>false</bool>
@@ -98,65 +101,57 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QTableWidget" name="tableWidget">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
-            </property>
-            <property name="sortingEnabled">
-             <bool>true</bool>
-            </property>
-            <property name="rowCount">
-             <number>1</number>
-            </property>
-            <property name="columnCount">
-             <number>1</number>
-            </property>
-            <row/>
-            <column>
-             <property name="text">
-              <string>x_0</string>
-             </property>
-            </column>
-           </widget>
-          </item>
-          <item>
-           <widget class="QTableWidget" name="measure">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <attribute name="verticalHeaderStretchLastSection">
-             <bool>false</bool>
-            </attribute>
-            <row>
-             <property name="text">
-              <string>1</string>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>y</string>
-             </property>
-            </column>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="generate_button">
-          <property name="text">
-           <string>Generate charts and coefficients</string>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
+          <widget class="LaTeXQTableWidget" name="tableWidget">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="rowCount">
+            <number>1</number>
+           </property>
+           <property name="columnCount">
+            <number>1</number>
+           </property>
+           <row/>
+           <column>
+            <property name="text">
+             <string>x_0</string>
+            </property>
+           </column>
+          </widget>
+          <widget class="LaTeXQTableWidget" name="measure">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <attribute name="verticalHeaderStretchLastSection">
+            <bool>false</bool>
+           </attribute>
+           <row>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string>y</string>
+            </property>
+           </column>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -167,7 +162,11 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="MPL_WIDGET" name="coef_fig" native="true"/>
+         <widget class="MPL_WIDGET" name="coef_fig" native="true">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -192,6 +191,46 @@
        </layout>
       </widget>
      </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Coefficients:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="LaTeXQTableWidget" name="coefficients_tab">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>90</height>
+         </size>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <row>
+         <property name="text">
+          <string>Value</string>
+         </property>
+        </row>
+        <column>
+         <property name="text">
+          <string>a_0</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -228,6 +267,11 @@
    <extends>QWidget</extends>
    <header location="global">mplwidget</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LaTeXQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">latexqtablewidget</header>
   </customwidget>
  </customwidgets>
  <resources/>

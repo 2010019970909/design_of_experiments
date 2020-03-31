@@ -432,7 +432,7 @@ def plot_pareto(coefficents, coefficents_labels=None, remove_a0: bool = True, ti
     return fig, ax
 
 
-def draw_henry(mpl, coefficents, coefficents_labels=None, remove_a0: bool = True, empirical_cumulative_distribution: str = "classical", a: float = 0, title: str = "Henry bar chart", legend: str = "| Coefficients |", draw: bool = False, **kwargs):
+def draw_henry(mpl, coefficents, coefficents_labels=None, remove_a0: bool = True, empirical_cumulative_distribution: str = "classical", a: float = 0, title: str = "Henry bar chart", legend: str = "| Coefficients |", draw: bool = True, **kwargs):
     """
     Draw the Henry's chart of the coefficients a_i.
 
