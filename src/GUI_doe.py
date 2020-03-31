@@ -26,7 +26,7 @@ from functools import partial
 if sys.platform == 'win32':
     import ctypes
     from ctypes import wintypes
-    appid = u'vincent_stragier.umons.doe.v1.0.0' # arbitrary string
+    appid = u'vincent_stragier.umons.doe.v1.0.0'  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
 
     lpBuffer = wintypes.LPWSTR()
@@ -34,14 +34,16 @@ if sys.platform == 'win32':
     AppUserModelID(ctypes.cast(ctypes.byref(lpBuffer), wintypes.LPWSTR))
     appid = lpBuffer.value
     ctypes.windll.kernel32.LocalFree(lpBuffer)
-    
+
+    """
     if appid is not None:
         print(appid)
-    """
+    
     import ctypes
     myappid = u'vincent_stragier.umons.doe.v1.0.0' # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     """
+
 
 class MainApp(QMainWindow, Ui_Design):
     """
@@ -56,25 +58,27 @@ class MainApp(QMainWindow, Ui_Design):
         # This is defined in design.py file automatically
         self.setupUi(self)
         self.setWindowTitle("Design of Experiments - by Vincent STRAGIER")
-        # self.setWindowIcon(QIcon('fpms.svg'))
         self.n_parameters.setValue(1)
         self.n_parameters.setMinimum(1)
         self.n_parameters.setMaximum(8)
-        header = self.measure.horizontalHeader()       
+        header = self.measure.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
-
-        header = self.tableWidget.horizontalHeader()       
+        header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         self.tableWidget.setAlternatingRowColors(True)
         self.measure.setAlternatingRowColors(True)
         self.coefficients_tab.setAlternatingRowColors(True)
-        #header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        #header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        # https://doc.qt.io/qt-5/qtabwidget.html#setTabEnabled
+        self.tabWidget.setTabEnabled(1, False)
+        self.tabWidget.setTabEnabled(2, False)
+        self.tabWidget.setTabEnabled(3, False)
         self.y = list()
         # It sets up layout and widgets that are defined
         self.showMaximized()
+        self.pushButton.setEnabled(False)
+        self.pushButton.clicked.connect(self.reset_y)
 
-    def keyPressEvent(self, e):  
+    def keyPressEvent(self, e):
         if e.key() == Qt.Key_Escape:
             self.close()
         if e.key() == Qt.Key_F11:
@@ -83,13 +87,20 @@ class MainApp(QMainWindow, Ui_Design):
             else:
                 self.showMaximized()
 
+    def reset_y(self):
+        n = self.measure.rowCount()
+        self.y = []
+
+        for i in range(n):
+            self.measure.setItem(i, 0, QTableWidgetItem(None))
+
     # DoubleSpinBox signals
     @pyqtSlot("double")
     def on_n_parameters_valueChanged(self, value):
         self.tableWidget.setRowCount(int(2**value))
         self.tableWidget.setColumnCount(int(value))
         self.measure.setRowCount(int(2**value))
-        
+
         labels = doe.gen_a_labels(n=int(value))
         self.coefficients_tab.setColumnCount(len(labels))
         self.coefficients_tab.setHorizontalHeaderLabels(labels, 12)
@@ -98,42 +109,24 @@ class MainApp(QMainWindow, Ui_Design):
         header = []
         for i in range(int(value)):
             header.append("$x_" + str(i) + "$")
-        
+
         self.tableWidget.setHorizontalHeaderLabels(header, 12)
-
-        #header = self.tableWidget.horizontalHeader()       
-        #header.setSectionResizeMode(0, QHeaderView.Stretch)
-
-        """
-        for i in range(int(value) + 1):
-            self.tableWidget.setHorizontalHeaderItem(i, QTableWidgetItem('x_' + str(i) + ''))
-            if i!=0:
-                header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
-        """
 
         design = doe.gen_design(int(value))
         for x in range(2**int(value)):
             for y in range(int(value)):
                 if design[x, y] == -1:
-                    item = QTableWidgetItem('-') # create the item
-                    #self.tableWidget.setItem(x, y, QTableWidgetItem('-'))
+                    item = QTableWidgetItem('-')  # create the item
 
                 elif design[x, y] == 1:
-                    item = QTableWidgetItem('+') # create the item
-                    #self.tableWidget.setItem(x, y, QTableWidgetItem('+'))
+                    item = QTableWidgetItem('+')  # create the item
 
-                item.setTextAlignment(Qt.AlignHCenter) # change the alignment
+                item.setTextAlignment(Qt.AlignHCenter)  # change the alignment
                 self.tableWidget.setItem(x, y, item)
-        """     
-        for i in range(int(value) + 1):
-            self.tableWidget.setHorizontalHeaderItem(i, QTableWidgetItem('x_' + str(i) + ''))
-            # header.setSectionResizeMode(i, QHeaderView.Stretch)
-        """
 
     @pyqtSlot(QTableWidgetItem)
     def on_measure_itemChanged(self, item):
         n = self.measure.rowCount()
-        #print(item.column(), item.row())
 
         if(item != None):
             try:
@@ -143,36 +136,66 @@ class MainApp(QMainWindow, Ui_Design):
 
         self.y = []
         for i in range(n):
-            if self.measure.item(i,0) != None:
-                self.y.append(float(self.measure.item(i,0).text()))
+            if self.measure.item(i, 0) != None:
+                self.y.append(float(self.measure.item(i, 0).text()))
             else:
+                if len(self.y) == 0:
+                    self.pushButton.setEnabled(False)
+                else:
+                    self.pushButton.setEnabled(True)
+
+                self.tabWidget.setTabEnabled(1, False)
+                self.tabWidget.setTabEnabled(2, False)
+                self.tabWidget.setTabEnabled(3, False)
                 return
 
+        # Enable the tabs
+        self.tabWidget.setTabEnabled(1, True)
+        self.tabWidget.setTabEnabled(2, True)
+        self.tabWidget.setTabEnabled(3, True)
+
         # Generate the table of coefficient
-        coef = np.dot(doe.gen_X_hat(n=int(np.log2(len(self.y)))), np.array(self.y))
+        coef = np.dot(doe.gen_X_hat(
+            n=int(np.log2(len(self.y)))), np.array(self.y))
         labels = doe.gen_a_labels(n=int(np.log2(len(self.y))))
 
         self.coefficients_tab.setRowCount(1)
         self.coefficients_tab.setColumnCount(len(labels))
+        self.coefficients_tab.setHorizontalHeaderLabels(labels, 12)
 
-        #header = self.coefficients_tab.horizontalHeader()       
-        #header.setSectionResizeMode(0, QHeaderView.Stretch)
-        self.coefficients_tab.setHorizontalHeaderLabels(labels, 12)   
         for i in range(len(labels)):
-            # self.coefficients_tab.setHorizontalHeaderItem(i, QTableWidgetItem(labels[i]))
             try:
                 item = QTableWidgetItem(str(coef[i]))
-                item.setTextAlignment(Qt.AlignHCenter) # change the alignment
-                
+                item.setTextAlignment(Qt.AlignHCenter)  # change the alignment
                 self.coefficients_tab.setItem(0, i, item)
             except:
                 print("error")
-        
-        doe.draw_coefficents(self.coef_fig.canvas, coef, color="orange", title="")
-        doe.draw_pareto(self.pareto_fig.canvas, coef, color="orange", title="")
-        # doe.draw_henry(self.henry_fig.canvas, coef, color="orange", title="")
 
-        # print(coef)
+    @pyqtSlot(int)
+    def on_tabWidget_currentChanged(self, index):
+        """ https://doc.qt.io/qt-5/qtabwidget.html#currentChanged """
+        if index == 1:
+            # Generate the table of coefficient
+            coef = np.dot(doe.gen_X_hat(
+                n=int(np.log2(len(self.y)))), np.array(self.y))
+            doe.clear_draw(self.coef_fig.canvas)
+            doe.draw_coefficents(self.coef_fig.canvas,
+                                 coef, color="blue", title="")
+
+        elif index == 2:
+            coef = np.dot(doe.gen_X_hat(
+                n=int(np.log2(len(self.y)))), np.array(self.y))
+            doe.clear_draw(self.pareto_fig.canvas)
+            doe.draw_pareto(self.pareto_fig.canvas,
+                            coef, color="blue", title="")
+
+        elif index == 3:
+            coef = np.dot(doe.gen_X_hat(
+                n=int(np.log2(len(self.y)))), np.array(self.y))
+            doe.clear_draw(self.henry_fig.canvas)
+            doe.draw_henry(self.henry_fig.canvas, coef,
+                           empirical_cumulative_distribution="modified", color="blue", title="")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'doe.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.2
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -49,6 +49,9 @@ class Ui_Design(object):
         self.horizontalLayout_4.addWidget(self.n_parameters)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem)
+        self.pushButton = QtWidgets.QPushButton(self.tab1)
+        self.pushButton.setObjectName("pushButton")
+        self.horizontalLayout_4.addWidget(self.pushButton)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
         self.splitter = QtWidgets.QSplitter(self.tab1)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
@@ -59,6 +62,7 @@ class Ui_Design(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tableWidget.sizePolicy().hasHeightForWidth())
         self.tableWidget.setSizePolicy(sizePolicy)
+        self.tableWidget.setToolTip("")
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidget.setRowCount(1)
         self.tableWidget.setColumnCount(1)
@@ -66,7 +70,7 @@ class Ui_Design(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
         self.measure = LaTeXQTableWidget(self.splitter)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.measure.sizePolicy().hasHeightForWidth())
@@ -152,7 +156,8 @@ class Ui_Design(object):
         _translate = QtCore.QCoreApplication.translate
         Design.setWindowTitle(_translate("Design", "MainWindow"))
         self.enter_parameter_label.setText(_translate("Design", "Enter the number of parameters (1≤):"))
-        self.tableWidget.setSortingEnabled(True)
+        self.pushButton.setText(_translate("Design", "Reset"))
+        self.tableWidget.setSortingEnabled(False)
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("Design", "x_0"))
         item = self.measure.verticalHeaderItem(0)

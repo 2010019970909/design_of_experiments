@@ -176,6 +176,7 @@ def draw_coefficents(mpl, coefficents, coefficents_labels=None, remove_a0: bool 
         labels = labels[1:]
         x = np.arange(len(coefficents))
 
+    # mpl.figure()
     mpl.ax.clear()
     rects = mpl.ax.bar(x, coefficents, **kwargs)
 
@@ -273,7 +274,7 @@ def plot_coefficents(coefficents, coefficents_labels=None, remove_a0: bool = Fal
     return fig, ax
 
 
-def draw_pareto(mpl, coefficents, coefficents_labels=None, remove_a0: bool = True, title: str = "Pareto bar chart", legend: str = "| Coefficients |", draw: bool = False, **kwargs):
+def draw_pareto(mpl, coefficents, coefficents_labels=None, remove_a0: bool = True, title: str = "Pareto bar chart", legend: str = "| Coefficients |", draw: bool = True, **kwargs):
     """
     Draw the Pareto's bar chart of the coefficients a_i.
 
@@ -318,6 +319,7 @@ def draw_pareto(mpl, coefficents, coefficents_labels=None, remove_a0: bool = Tru
     coefficents = coefficents[index]
     labels = labels[index]
 
+    # mpl.figure()
     mpl.ax.clear()
     rects = mpl.ax.barh(y, coefficents, **kwargs)
 
@@ -345,6 +347,7 @@ def draw_pareto(mpl, coefficents, coefficents_labels=None, remove_a0: bool = Tru
     mpl.ax.set_yticklabels(labels)
     # ax.grid(which='major')
     mpl.ax.legend([legend])
+    # mpl.ax.autoscale_view(True,True,True)
     # fig.tight_layout()
     if draw:
         mpl.draw()
@@ -494,6 +497,7 @@ def draw_henry(mpl, coefficents, coefficents_labels=None, remove_a0: bool = True
     # Corresponding quantile (normit) z(i)
     normits = erfinv(2*dist - 1) * np.sqrt(2)
 
+    # mpl.figure()
     mpl.ax.clear()
     mpl.ax.plot(coefficents, normits, marker='1',
                 linestyle='--', linewidth=0.5, **kwargs)
@@ -503,7 +507,7 @@ def draw_henry(mpl, coefficents, coefficents_labels=None, remove_a0: bool = True
     mpl.ax.set_yticklabels(labels)
     mpl.ax.grid(which='major')
     mpl.ax.legend([legend])
-    # Dfig.tight_layout()
+    # fig.tight_layout()
     if draw:
         mpl.draw()
 
@@ -588,6 +592,10 @@ def plot_henry(coefficents, coefficents_labels=None, remove_a0: bool = True, emp
 
     return fig, ax
 
+def clear_draw(mpl):
+    mpl.ax.clear()
+    mpl.draw()
+
 
 def main():
     # Test 1
@@ -601,9 +609,9 @@ def main():
     print("y_hat:", y_hat)
 
     plot_coefficents(a_hat, block=False, color="orange")
-    plot_pareto(a_hat, block=False, color="orange")
+    plot_pareto(a_hat, block=True, color="orange")
     plot_henry(a_hat, empirical_cumulative_distribution="modified",
-               block=False, color="blue")
+               block=True, color="blue")
 
     print('Test 1:', y_hat == y, end="\n\n")
 
@@ -617,7 +625,7 @@ def main():
     a_hat_check = np.dot(gen_X_hat(n=2), y)
     print("a_hat_check", a_hat_check)
 
-    plot_coefficents(a_hat, block=False, color="orange")
+    plot_coefficents(a_hat, block=True, color="orange")
     plot_henry(a_hat, empirical_cumulative_distribution="modified",
                block=True, color="blue")
 

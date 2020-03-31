@@ -54,7 +54,7 @@ class LaTeXQTableWidget(QtWidgets.QTableWidget):
         for key in (QtCore.Qt.Key_Return, QtCore.Qt.Key_Enter):
             QtWidgets.QShortcut(key, self,
                                 partial(self.focusNextPrevChild, True))
-        """    
+        """
     """
     def keyPressEvent(self, ev):        
         if ev.key() in (QtCore.Qt.Key_Return, QtCore.Qt.Key_Enter):
