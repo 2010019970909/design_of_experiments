@@ -19,7 +19,9 @@ import matplotlib.cm as cm
 # Import design_of_experiments
 import design_of_experiments as doe
 # To add a key binding
-from functools import partial
+# from functools import partial
+# Import os
+import os
 
 class MainApp(QMainWindow, Ui_Design):
     """
@@ -191,7 +193,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     MyApplication = MainApp()
     MyApplication.show()  # Show the form
-
-    app.setWindowIcon(QIcon('fpms.svg'))
-    MyApplication.setWindowIcon(QIcon('fpms.svg'))
+    icon_path = os.path.join(os.path.dirname(sys.argv[0]), 'ico', 'fpms.svg')
+    app.setWindowIcon(QIcon(icon_path))
+    MyApplication.setWindowIcon(QIcon(icon_path))
     sys.exit(app.exec_())  # Execute the app

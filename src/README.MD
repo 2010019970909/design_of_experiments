@@ -1,6 +1,6 @@
 # Here is the source code for the project
 
-`GUI_doe.py` is the GUI for the Design of Experiments (DoE).
+`GUI_doe.pyw` is the GUI for the Design of Experiments (DoE).
 
 `design_of_experiments.py` is the library that contains all the DoE related functions used in the GUI.
 
