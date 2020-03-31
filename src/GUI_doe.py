@@ -21,30 +21,6 @@ import design_of_experiments as doe
 # To add a key binding
 from functools import partial
 
-# For Windows set AppID to add an Icon in the taskbar
-# https://stackoverflow.com/questions/1551605/how-to-set-applications-taskbar-icon-in-windows-7
-if sys.platform == 'win32':
-    import ctypes
-    from ctypes import wintypes
-    appid = u'vincent_stragier.umons.doe.v1.0.0'  # arbitrary string
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
-
-    lpBuffer = wintypes.LPWSTR()
-    AppUserModelID = ctypes.windll.shell32.GetCurrentProcessExplicitAppUserModelID
-    AppUserModelID(ctypes.cast(ctypes.byref(lpBuffer), wintypes.LPWSTR))
-    appid = lpBuffer.value
-    ctypes.windll.kernel32.LocalFree(lpBuffer)
-
-    """
-    if appid is not None:
-        print(appid)
-    
-    import ctypes
-    myappid = u'vincent_stragier.umons.doe.v1.0.0' # arbitrary string
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-    """
-
-
 class MainApp(QMainWindow, Ui_Design):
     """
     MainApp class inherit from QMainWindow and from
@@ -198,6 +174,20 @@ class MainApp(QMainWindow, Ui_Design):
 
 
 if __name__ == "__main__":
+    # For Windows set AppID to add an Icon in the taskbar
+    # https://stackoverflow.com/questions/1551605/how-to-set-applications-taskbar-icon-in-windows-7
+    if sys.platform == 'win32':
+        import ctypes
+        from ctypes import wintypes
+        appid = u'vincent_stragier.umons.doe.v1.0.0'  # arbitrary string
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
+
+        lpBuffer = wintypes.LPWSTR()
+        AppUserModelID = ctypes.windll.shell32.GetCurrentProcessExplicitAppUserModelID
+        AppUserModelID(ctypes.cast(ctypes.byref(lpBuffer), wintypes.LPWSTR))
+        appid = lpBuffer.value
+        ctypes.windll.kernel32.LocalFree(lpBuffer)
+        
     app = QApplication(sys.argv)
     MyApplication = MainApp()
     MyApplication.show()  # Show the form
