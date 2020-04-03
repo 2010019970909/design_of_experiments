@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Module implementing GUI DoE.
+Implemantation of a GUI for the DoE.
 """
 # Import PyQt Widgets for PyQt5 version
 import sys
@@ -55,16 +55,24 @@ class MainApp(QMainWindow, Ui_Design):
         self.showMaximized()
         self.pushButton.setEnabled(False)
         self.pushButton.clicked.connect(self.reset_y)
+        # Only generate the graphs one for each tab
+        self.to_genrated = [True, True, True]
+        self.gen_all = True 
 
+    # Intercept the key events
     def keyPressEvent(self, e):
+        # Close the program
         if e.key() == Qt.Key_Escape:
             self.close()
+
+        # Maximize the window
         if e.key() == Qt.Key_F11:
             if self.isMaximized():
                 self.showNormal()
             else:
                 self.showMaximized()
 
+    # Reset the table of measures (y)
     def reset_y(self):
         n = self.measure.rowCount()
         self.y = []
@@ -72,7 +80,7 @@ class MainApp(QMainWindow, Ui_Design):
         for i in range(n):
             self.measure.setItem(i, 0, QTableWidgetItem(None))
 
-    # DoubleSpinBox signals
+    # DoubleSpinBox signals (updates the DoE table)
     @pyqtSlot("double")
     def on_n_parameters_valueChanged(self, value):
         self.tableWidget.setRowCount(int(2**value))
@@ -102,26 +110,30 @@ class MainApp(QMainWindow, Ui_Design):
                 item.setTextAlignment(Qt.AlignHCenter)  # change the alignment
                 self.tableWidget.setItem(x, y, item)
 
+        self.on_measure_itemChanged(None) # Check if the table is full or not
+
+    # Check the table containing the mesures in order to generate the graphs if the table is full.
     @pyqtSlot(QTableWidgetItem)
     def on_measure_itemChanged(self, item):
         n = self.measure.rowCount()
 
-        if(item != None):
+        if(item != None): # Check if the value is convertible to a float if the item is not None (prevent circular call)
             try:
                 float(item.text())
-            except ValueError:
+            except ValueError: # If the value is not convertible we empty the item and set it as None (the set trigger this function again)
                 self.measure.setItem(item.row(), item.column(), None)
 
         self.y = []
-        for i in range(n):
-            if self.measure.item(i, 0) != None:
+        for i in range(n): # Read the measured values
+            if self.measure.item(i, 0) != None: # If the value exist, add it too the table
                 self.y.append(float(self.measure.item(i, 0).text()))
-            else:
-                if len(self.y) == 0:
+            else: # If the item is empty (None) return, and set some states
+                if len(self.y) == 0: # The table is empty so the reset button is disable
                     self.pushButton.setEnabled(False)
-                else:
+                else: # The table is not empty so the reset button is enable
                     self.pushButton.setEnabled(True)
 
+                # Disable the tabs
                 self.tabWidget.setTabEnabled(1, False)
                 self.tabWidget.setTabEnabled(2, False)
                 self.tabWidget.setTabEnabled(3, False)
@@ -137,9 +149,10 @@ class MainApp(QMainWindow, Ui_Design):
             n=int(np.log2(len(self.y)))), np.array(self.y))
         labels = doe.gen_a_labels(n=int(np.log2(len(self.y))))
 
+        # Display the coefficients (labels and values)
         self.coefficients_tab.setRowCount(1)
         self.coefficients_tab.setColumnCount(len(labels))
-        self.coefficients_tab.setHorizontalHeaderLabels(labels, 12)
+        self.coefficients_tab.setHorizontalHeaderLabels(labels, 12) # Use the LaTeX renderer
 
         for i in range(len(labels)):
             try:
@@ -149,30 +162,52 @@ class MainApp(QMainWindow, Ui_Design):
             except:
                 print("error")
 
+        # If gen_all, all the graphs are generated one time after all the measurement have been entered
+        if self.gen_all:
+            doe.clear_draw(self.coef_fig.canvas)
+            doe.draw_coefficents(self.coef_fig.canvas,
+                                 coef, color="blue", title="")
+            doe.clear_draw(self.pareto_fig.canvas)
+            doe.draw_pareto(self.pareto_fig.canvas,
+                            coef, color="blue", title="")
+            doe.clear_draw(self.henry_fig.canvas)
+            doe.draw_henry(self.henry_fig.canvas, coef,
+                           empirical_cumulative_distribution="modified", color="blue", title="")
+            return
+        
+        # Says if we have to regenerate the graphs when we will change for another tab
+        self.to_genrated = [True, True, True]
+
     @pyqtSlot(int)
     def on_tabWidget_currentChanged(self, index):
-        """ https://doc.qt.io/qt-5/qtabwidget.html#currentChanged """
-        if index == 1:
+        # https://doc.qt.io/qt-5/qtabwidget.html#currentChanged
+        if self.gen_all:
+            return
+
+        if index == 1 and self.to_genrated[0]:
             # Generate the table of coefficient
             coef = np.dot(doe.gen_X_hat(
                 n=int(np.log2(len(self.y)))), np.array(self.y))
             doe.clear_draw(self.coef_fig.canvas)
             doe.draw_coefficents(self.coef_fig.canvas,
                                  coef, color="blue", title="")
+            self.to_genrated[0] = False
 
-        elif index == 2:
+        elif index == 2 and self.to_genrated[1]:
             coef = np.dot(doe.gen_X_hat(
                 n=int(np.log2(len(self.y)))), np.array(self.y))
             doe.clear_draw(self.pareto_fig.canvas)
             doe.draw_pareto(self.pareto_fig.canvas,
                             coef, color="blue", title="")
+            self.to_genrated[1] = False
 
-        elif index == 3:
+        elif index == 3 and self.to_genrated[2]:
             coef = np.dot(doe.gen_X_hat(
                 n=int(np.log2(len(self.y)))), np.array(self.y))
             doe.clear_draw(self.henry_fig.canvas)
             doe.draw_henry(self.henry_fig.canvas, coef,
                            empirical_cumulative_distribution="modified", color="blue", title="")
+            self.to_genrated[2] = False
 
 
 if __name__ == "__main__":
