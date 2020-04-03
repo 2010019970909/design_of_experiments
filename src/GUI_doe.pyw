@@ -99,6 +99,17 @@ class MainApp(QMainWindow, Ui_Design):
         self.tableWidget.setHorizontalHeaderLabels(header, 12)
 
         design = doe.gen_design(int(value))
+        for index, element in np.ndenumerate(design):
+            if element == -1:
+                item = QTableWidgetItem('-')  # create the item
+
+            elif element == 1:
+                item = QTableWidgetItem('+')  # create the item
+
+            item.setTextAlignment(Qt.AlignHCenter)  # change the alignment
+            self.tableWidget.setItem(index[0], index[1], item)
+        
+        """
         for x in range(2**int(value)):
             for y in range(int(value)):
                 if design[x, y] == -1:
@@ -109,6 +120,7 @@ class MainApp(QMainWindow, Ui_Design):
 
                 item.setTextAlignment(Qt.AlignHCenter)  # change the alignment
                 self.tableWidget.setItem(x, y, item)
+        """
 
         self.on_measure_itemChanged(None) # Check if the table is full or not
 
