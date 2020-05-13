@@ -1,0 +1,425 @@
+%%% Identification --- The file declares itself as a package written with the LaTeX2ε syntax. 
+%%
+% Format
+\NeedsTeXFormat{LaTeX2e}
+
+% Package info
+\ProvidesPackage{umonsCover}[2017/08/21 Coverpage for any document at UMONS]
+
+
+
+%%% Preliminary declarations --- External packages needed are imported and commands and definitions needed by the declared options are coded
+%%
+% Global variables to be declared in the preamble
+\newcommand\umonsAuthor[1]{\renewcommand\@umonsAuthor{#1}}
+\newcommand\@umonsAuthor{\PackageWarningNoLine{umonsCover}{No \noexpand\umonsAuthor given}}
+
+\newcommand\umonsSupervisor[1]{\renewcommand\@umonsSupervisor{#1}}
+\newcommand\@umonsSupervisor{\PackageWarningNoLine{umonsCover}{No \noexpand\umonsSupervisor given}}
+
+
+\newcommand\umonsTitle[1]{\renewcommand\@umonsTitle{#1}}
+\newcommand\@umonsTitle{\PackageWarningNoLine{umonsCover}{No \noexpand\umonsTitle given}}
+
+\newcommand\umonsSubtitle[1]{\renewcommand\@umonsSubtitle{#1}}
+\newcommand\@umonsSubtitle{\PackageWarningNoLine{umonsCover}{No \noexpand\umonsSubtitle given}}
+
+\newcommand\umonsDocumentType[1]{\renewcommand\@umonsDocumentType{#1}}
+\newcommand\@umonsDocumentType{\PackageWarningNoLine{umonsCover}{No \noexpand\umonsDocumentType given}}
+
+\newcommand\umonsDate[1]{\renewcommand\@umonsDate{#1}}
+\newcommand\@umonsDate{\PackageWarningNoLine{umonsCover}{No \noexpand\umonsDate given}}
+
+
+\newcommand\umonsFacultyName[1]{\renewcommand\@umonsFacultyName{#1}}
+\newcommand\@umonsFacultyName{\PackageError{umonsCover}{No \noexpand\umonsFacultyName given}}
+
+\newcommand\umonsFacultyLogo[1]{\renewcommand\@umonsFacultyLogo{#1}}
+\newcommand\@umonsFacultyLogo{\PackageError{umonsCover}{No \noexpand\umonsFacultyLogo given}}
+
+\newcommand\umonsFacultyPhoto[1]{\renewcommand\@umonsFacultyPhoto{#1}}
+\newcommand\@umonsFacultyPhoto{\PackageError{umonsCover}{No \noexpand\umonsFacultyPhoto given}}
+
+\newcommand\umonsFacultyEmblem[1]{\renewcommand\@umonsFacultyEmblem{#1}}
+\newcommand\@umonsFacultyEmblem{\PackageWarningNoLine{umonsCover}{No \noexpand\umonsFacultyEmblem given}}
+
+
+% Packages required for options
+\RequirePackage{kvoptions}
+\RequirePackage{etoolbox}
+\RequirePackage{xcolor}
+
+
+%%% Options --- The package declares and processes the options.
+%%
+% Setup key-val options
+\SetupKeyvalOptions{
+	family=umons,
+	prefix=umons@
+}
+
+% Language options
+\DeclareStringOption[english]{language}
+
+% Faculty options (for any new faculty, check the color in "Normes graphiques")
+\DeclareVoidOption{archi}{%
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{Facult\'{e} d'Architecture et d'Urbanisme}%
+	}{% else default: english
+		\umonsFacultyName{Faculty of Architecture and \\\hspace*{1em}Urban Planning}%
+	}
+	\umonsFacultyLogo{umonsCharte/ARCHI-Logo}
+	\umonsFacultyPhoto{umonsCharte/UMONS-Photo}
+	\umonsFacultyEmblem{umonsCharte/ARCHI-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{162,195,1}
+}
+\DeclareVoidOption{droit}{%
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{\'{E}cole de Droit}%
+	}{% else default: english
+		\umonsFacultyName{Bachelor's in Law}%
+	}
+	\umonsFacultyLogo{umonsCharte/DROIT-Logo}
+	\umonsFacultyPhoto{umonsCharte/UMONS-Photo}
+	\umonsFacultyEmblem{umonsCharte/DROIT-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{102,40,74}
+}
+\DeclareVoidOption{eii}{%
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{Facult\'{e} de Traduction et d'Interpr\'{e}tation \\\hspace*{1em}- \'{E}cole d'Interpr\`{e}tes Internationaux}%
+	}{% else default: english
+		\umonsFacultyName{Faculty of Translation and Interpretation \\\hspace*{1em}- School of International Interpreters}%
+	}
+	\umonsFacultyLogo{umonsCharte/EII-Logo}
+	\umonsFacultyPhoto{umonsCharte/UMONS-Photo}
+	\umonsFacultyEmblem{umonsCharte/EII-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{205,0,76}
+}
+\DeclareVoidOption{fmm}{%
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{Facult\'{e} de M\'{e}decine et de Pharmacie}%
+	}{% else default: english
+		\umonsFacultyName{Faculty of Medicine and Pharmacy}%
+	}
+	\umonsFacultyLogo{umonsCharte/FMM-Logo}
+	\umonsFacultyPhoto{umonsCharte/UMONS-Photo}
+	\umonsFacultyEmblem{umonsCharte/FMM-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{196,2,66}
+}
+\DeclareVoidOption{fpms}{% Option for fpms students
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{Facult\'{e} Polytechnique}%
+	}{% else default: english
+		\umonsFacultyName{Faculty of Engineering}%
+	}
+	\umonsFacultyLogo{umonsCharte/LOGO_FPMs}
+	\umonsFacultyPhoto{umonsCharte/FPMS-Photo}
+	\umonsFacultyEmblem{umonsCharte/FPMS-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{0,76,147}
+}
+\DeclareVoidOption{fs}{% Option for fs students
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{Facult\'{e} des Sciences}%
+	}{% else default: english
+		\umonsFacultyName{Faculty of Science}%
+	}
+	\umonsFacultyLogo{umonsCharte/FS-Logo}
+	\umonsFacultyPhoto{umonsCharte/UMONS-Photo}
+	\umonsFacultyEmblem{umonsCharte/FS-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{2,150,135}
+}
+\DeclareVoidOption{psy}{%
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{Facult\'{e} de Psychologie et \\\hspace*{1em}des Sciences de l'\'{E}ducation}%
+	}{% else default: english
+		\umonsFacultyName{Faculty of Psychology and Education}%
+	}
+	\umonsFacultyLogo{umonsCharte/PSY-Logo}
+	\umonsFacultyPhoto{umonsCharte/UMONS-Photo}
+	\umonsFacultyEmblem{umonsCharte/PSY-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{0,158,224}
+}
+\DeclareVoidOption{shs}{%
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{\'{E}cole des Sciences Humaines et \\\hspace*{1em}Sociales}%
+	}{% else default: english
+		\umonsFacultyName{School of Human and Social Sciences}%
+	}
+	\umonsFacultyLogo{umonsCharte/SHS-Logo}
+	\umonsFacultyPhoto{umonsCharte/UMONS-Photo}
+	\umonsFacultyEmblem{umonsCharte/SHS-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{252,94,10}
+}
+\DeclareVoidOption{wawa}{%
+	\ifdefstring{\umons@language}{french}{%if french
+		\umonsFacultyName{Facult\'{e} Warocqu\'{e} d'\'{E}conomie et \\\hspace*{1em}de Gestion}%
+	}{% else default: english
+		\umonsFacultyName{Warocqu\'{e} School of Business and \\\hspace*{1em}Economics}%
+	}
+	\umonsFacultyLogo{umonsCharte/WAWA-Logo}
+	\umonsFacultyPhoto{umonsCharte/UMONS-Photo}
+	\umonsFacultyEmblem{umonsCharte/WAWA-Emblem}
+	\definecolor{umonsFacultyColor}{RGB}{0,70,150}
+}
+
+% Boolean options
+\DeclareBoolOption[false]{department}% To place the departement's logo
+\DeclareBoolOption[false]{emblem}{% To place the Faculty's emblem at the bottom right
+
+
+
+% Behaviour if any unknown option
+\DeclareDefaultOption{\PackageWarning{umonsCover}{Unknown option ‘\CurrentOption’. Valid options are: language, archi | droit | eii | fmm | fpms | fs | psy | shs | wawa, department, emblem}}
+
+
+% Options processing
+\ProcessKeyvalOptions{umons}\relax
+
+
+
+%%% More declarations --- The main body of the package.
+%%
+% Starred version (\umonsCoverPage*) to display only the minimal information
+\newcommand*{\umonsCoverPage}{\@ifstar\@umonsCoverPageReduced\@umonsCoverPageComplete}
+
+% Required packages
+\RequirePackage[absolute]{textpos} %,noshowtext,showboxes
+\RequirePackage{calc}% for lengths computations
+\RequirePackage{ifluatex}
+\RequirePackage{graphicx}
+
+% Font encoding
+\ifluatex
+	\RequirePackage{fontspec}
+\else
+	\RequirePackage[T1]{fontenc}
+	\RequirePackage[utf8]{inputenc}
+	\RequirePackage{lmodern}
+\fi
+
+% Language
+\ifdefstring{\umons@language}{english}{%if english
+	\ifluatex
+		\RequirePackage{polyglossia}
+		\setdefaultlanguage{english}
+	\else
+		\RequirePackage[english]{babel}
+	\fi
+}{% else
+	\ifdefstring{\umons@language}{french}{%if french
+		\ifluatex
+			\RequirePackage{polyglossia}
+			\setdefaultlanguage{french}
+		\else
+			\RequirePackage[french]{babel}
+		\fi%
+	}{% else
+		\PackageError{umonsCover}{Undefined `\umons@language' language!}{Defined languages are: english, french.}%
+	}%
+}
+\usepackage{csquotes}
+\usepackage{microtype}
+
+
+% Opening & closing the title page
+\newcommand*{\@umonsCoverPageOpen}{%
+	% Check if 'memoir' class is being used
+	\@ifundefined{titlingpage}
+	{%if true
+		\begin{titlepage}
+	}%
+	{%if false
+		\PackageInfo{umonsCover}{`memoir' class detected: switch from `titlepage' environment to `titlingpage'.}
+		\begin{titlingpage}
+	}%
+	% Reference for block positioning
+	\textblockorigin{0cm}{0cm}
+	% Change font
+	\ifluatex
+		\setmainfont{texgyreheros}
+	\else
+		\fontfamily{phv}\selectfont
+	\fi
+}
+
+\newcommand*{\@umonsCoverPageClose}{%
+	% Check if 'memoir' class is being used
+	\@ifundefined{titlingpage}
+	{%if true
+		\end{titlepage}
+		% End cover page and generate a new one
+		\ \cleardoublepage
+	}%
+	{%if false
+		\end{titlingpage}
+		\ \clearpage
+	}%
+	% Reset counters
+	\setcounter{page}{1}%
+	%\setcounter{footnote}{0}%
+	% Reset font
+	\ifluatex
+		\setmainfont{CMU Serif}
+	\else
+		\normalfont\normalsize%
+	\fi
+	% Set page style
+	\pagestyle{plain}
+}
+	
+
+% Writing the minimal content
+\newcommand*{\@umonsCoverPageMinimalContent}{
+	% Block with UMONS logo
+	\begin{textblock*}{63mm}(82mm,11mm)
+		\ifdefstring{\umons@language}{french}{%if french
+			\hbox{\includegraphics[width=62mm]{umonsCharte/LOGO_UMONS}}
+		}{% else default: english
+			\hbox{\includegraphics[width=62mm]{umonsCharte/UMONS-Logo_EN}}
+		}
+	\end{textblock*}
+	
+	% Colored box with faculty name
+	\begin{textblock*}{130mm}(80mm,45mm)
+		\fontsize{20}{24}\selectfont
+		\noindent\colorbox{umonsFacultyColor}{%
+			\begin{minipage}[c][25mm-2\fboxsep][t]{\linewidth-2\fboxsep}
+				\vspace*{2.5mm}\hspace*{1.5mm}\textcolor{white}{\@umonsFacultyName}
+			\end{minipage}%
+		}%
+	\end{textblock*}
+	
+	% Main text block
+	\begin{textblock*}{120mm}(82mm,86mm)
+		\noindent\begin{minipage}[c][95mm-2\fboxsep][t]{\linewidth-2\fboxsep}
+			
+			\fontsize{18}{22}\selectfont% Size for the \umonsTitle entry
+			\noindent\textcolor[gray]{0}{\@umonsTitle}\par
+			
+			\vspace{15pt}% Spacing between the \umonsTitle and the \umonsSubtitle entries	
+			
+			\fontsize{12}{14}\selectfont% Size for the \umonsSubtitle entry
+			\noindent\textcolor[gray]{0}{\@umonsSubtitle}\par
+			
+			\vspace{30pt}% Spacing between the \umonsSubtitle and the \umonsDocumentType 
+			
+			\fontsize{10}{12}\selectfont% Size for the \umonsDocumentType entry
+			\noindent\textcolor[gray]{0}{\@umonsDocumentType}
+			
+			\vfill% Spacing between the \umonsDocumentType and the \umonsAuthor
+			
+			\fontsize{12}{14}\selectfont% Size for the \umonsAuthor entry
+			\noindent\textcolor[gray]{0}{\@umonsAuthor}
+		\end{minipage}
+	\end{textblock*}
+	
+	% Second text block
+	\begin{textblock*}{120mm}(82mm,220mm)%
+		\noindent\begin{minipage}[c][21mm-2\fboxsep][t]{\linewidth-2\fboxsep}%
+			
+			\fontsize{10}{12}\selectfont% Size for the \umonsSupervisor entry
+			\noindent\textcolor[gray]{0}{\@umonsSupervisor}\par
+			
+			\vfill% Spacing between the \umonsSupervisor and the \umonsDate entries
+			
+			\fontsize{10}{12}\selectfont% Size for the \umonsDate entry
+			\noindent\textcolor[gray]{0}{\@umonsDate}
+		\end{minipage}
+	\end{textblock*}
+	
+	% Block with Faculty logo
+	\begin{textblock*}{67mm}(80mm,188mm)
+		\hbox{\includegraphics[height=23mm]{\@umonsFacultyLogo}}
+	\end{textblock*}
+	
+	% Block with Department logo
+	\ifumons@department
+	\begin{textblock*}{36mm}(160mm,188mm)
+		\IfFileExists{umonsCharte/Department-Logo.png}{%true
+			\hbox{\includegraphics[height=23mm]{umonsCharte/Department-Logo}}
+		}{%false
+			\IfFileExists{umonsCharte/Department-Logo.jpg}{%true
+				\hbox{\includegraphics[height=23mm]{umonsCharte/Department-Logo}}
+			}{%false
+				\IfFileExists{umonsCharte/Department-Logo.eps}{%true
+					\hbox{\includegraphics[height=23mm]{umonsCharte/Department-Logo}}
+				}{%false
+					\PackageWarning{umonsCover}{The `department' option is enabled but no ``umonsCharte/Department-Logo'' file exists; option shall be ignored.}
+					\relax
+				}
+			}
+		}
+	\end{textblock*}
+	\fi
+	
+	% Block with AUWB logo %% Obsolete
+	%    \begin{textblock*}{30mm}(80mm,273mm)
+	%        \hbox{\includegraphics[width=29mm]{umonsCharte/AUWB-Logo}}
+	%    \end{textblock*}
+	% Block with Pôle Hainuyer
+	\begin{textblock*}{30mm}(80mm,256mm)
+		\hbox{\includegraphics[width=18mm]{umonsCharte/Pole_hainuyer-Logo}}
+	\end{textblock*}
+
+	% Block with Faculty's emblem
+	\ifumons@emblem
+	\begin{textblock*}{30mm}(185mm,256mm)
+	\IfFileExists{\@umonsFacultyEmblem.pdf}{%true
+			\hbox{\includegraphics[height=12mm]{\@umonsFacultyEmblem}}
+		}{%false
+			\IfFileExists{\@umonsFacultyEmblem.png}{%true
+				\hbox{\includegraphics[height=12mm]{\@umonsFacultyEmblem}}
+			}{%false
+				\IfFileExists{\@umonsFacultyEmblem.jpg}{%true
+					\hbox{\includegraphics[height=12mm]{\@umonsFacultyEmblem}}
+				}{%false
+					\IfFileExists{\@umonsFacultyEmblem.eps}{%true
+						\hbox{\includegraphics[height=12mm]{\@umonsFacultyEmblem}}
+					}{%false
+						\PackageWarning{umonsCover}{The `emblem' option is enabled but no ``\@umonsFacultyEmblem'' file exists; option shall be ignored.}
+						\relax
+					}
+				}
+			}
+		}
+	\end{textblock*}
+	\fi
+}
+
+
+% Print the cover page
+\newcommand*{\@umonsCoverPageReduced}[1][]{
+	\@umonsCoverPageOpen
+	\@umonsCoverPageMinimalContent
+	\@umonsCoverPageClose
+}
+
+\newcommand*{\@umonsCoverPageComplete}[1][\@umonsFacultyPhoto]{
+	\@umonsCoverPageOpen
+	\@umonsCoverPageMinimalContent
+	
+	% Personal picture block
+	\begin{textblock*}{75mm}(0mm,83mm)
+%		\if@reliure
+%		\hbox{\hspace{10mm}\includegraphics[width=65mm]{#1}}
+%		\else
+			\hbox{\includegraphics[width=75mm]{#1}}
+%		\fi
+	\end{textblock*}
+	\@umonsCoverPageClose
+}
+
+
+
+%%% Credits
+%%
+% Original: made by Philippe Fortemps (2010)
+% Commented by Lucas Equeter and Alexandre Quenon (2013)
+% 
+% Modified by Alexandre Quenon:
+% - 2014, small layout modifications
+% - 2017, class-independent (works with `memoir' as well), compiler independant (works with plain TeX, LaTeX and LuaLaTeX)
+% - 2017-08-21, add microtype package
+
+
+\endinput

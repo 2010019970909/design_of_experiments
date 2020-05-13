@@ -1,0 +1,366 @@
+\documentclass[english, 12 pt, openany, oneside]{book}
+
+\usepackage{graphicx}
+\graphicspath{{./Images/}}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\setcounter{secnumdepth}{3}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,here}
+\usepackage{a4wide}
+
+%\usepackage[fpms]{umons-coverpage}
+% \usepackage[framed]{mcode}
+\usepackage{hyperref}
+%\usepackage{comment}
+
+\hypersetup{
+colorlinks=true,
+linkcolor=black,
+urlcolor=blue,
+}
+
+\usepackage{siunitx}
+\usepackage{listings}
+
+\DeclareMathOperator{\e}{e}
+\DeclareMathOperator{\arccosh}{acosh}
+
+% Better looking table for math
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{3pt}
+\setlength\cellspacebottomlimit{3pt}
+
+\usepackage{csquotes}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\bf\huge}{\thechapter}{2pc}{}
+
+\usepackage{pythontex}
+
+\usepackage[language=english,fpms,emblem]{umonsCover}
+\umonsAuthor{Vincent \textsc{Stragier}}
+% The main title of your thesis
+\umonsTitle{Industrial Instrumention}
+% The sub-title of your thesis
+\umonsSubtitle{A Graphical User Interface for the two factorial Design of Experiments using Python and Qt}
+% The type of document: the reason of the thesis
+\umonsDocumentType{Project report}
+% Your supervisor(s)
+\umonsSupervisor{Under the supervision of\\ Professor Patrice \textsc{Mégret}}
+% The date (or academic year)
+\umonsDate{Academic year 2019--2020}
+
+% \usepackage{verbatim} 
+
+% \usepackage{xparse}
+
+%\NewDocumentCommand{\codeword}{v}{%
+%\texttt{\textcolor{blue}{#1}}%
+%}
+
+% \lstset{language=matlab,keywordstyle={\bfseries \color{blue}}}
+
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+\usepackage[style=numeric]{biblatex}
+\addbibresource{Intercultural_relations.bib}
+
+\begin{document}
+% Setup pycode
+\begin{pyconcode}
+import os;
+os.chdir('../')
+import sys
+sys.path.append("D:\\Vincent\\Documents\\Github\\design_of_experiments\\src")
+sys.path.append(os.getcwd())
+sys.path = list(set(sys.path))
+\end{pyconcode}
+
+\lstset{language=Matlab,%
+    %basicstyle=\color{red},
+    breaklines=true,%
+    morekeywords={matlab2tikz},
+    keywordstyle=\color{blue},%
+    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+    identifierstyle=\color{black},%
+    stringstyle=\color{mylilas},
+    commentstyle=\color{mygreen},%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle={\tiny \color{black}},% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    emph=[1]{for,end,break},emphstyle=[1]\color{red}, %some words to emphasise
+    %emph=[2]{word1,word2}, emphstyle=[2]{style},    
+}
+
+
+\umonsCoverPage
+
+\frontmatter
+\tableofcontents
+
+
+% \chapter*{\centering Remerciements}
+\mainmatter
+\phantomsection
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+The aim of this report is to introduce quickly the theoretical basis of the Design of Experiments (DoE), to explain how it has been implemented in Python, to show how to use the project Graphical User Interface (GUI). The focus will be put on the programming part.
+
+\chapter{Theory about two factorial Design of Experiments}
+Most of the following information are coming from the course book of Professor Mégret (Chapter 10 - Design of experiments).
+
+Design of experiments is a field of science that studies the theory of measurement. It aims to find an optimal way of taking and analysing the measurement. In order to limit the number of measurement to the lowest number of needed measurement as well as reducing the measurement time.
+
+In fact we should meet the following requirement:
+
+\begin{itemize}
+\item quickly arrive at the best possible results
+\item omit unnecessary trials
+\item give results with the lowest uncertainty
+\item progress without failure
+\item establish a model for the studied phenomenon
+\item  discover the optimal solution
+\end{itemize}
+
+In short we are trying to proceed to the measurement of a limited number of parameters with the most efficient method.
+
+\section{Factorial design}
+Factorial design is a technique which allows to define a measurement pattern in the experimental plane. It means that we have to take a measurement of each level for each factor.
+
+\begin{equation}
+m = m_0^{n}
+\end{equation}
+
+Where $m$ is the number of measurement, $m_0$ is the number of levels and $n$ is the number of factors that you want to adjust.
+
+A particular case of the factorial design is the two levels factorial design ($m_0 = 2$). Therefore the number of trials is only depending on the numbers of factor ($m = 2^n$). Will will implement it in the algorithm.
+
+
+\chapter{Python implementation}
+In order implement the GUI for this project, a module has been made to compute the needed matrices for the DoE. Then the Qt tools have been used (PyQt5 and Qt Designer).
+
+The code of this project is fully available on GitHub: \url{https://github.com/2010019970909/design_of_experiments}. I am going to expose my usual procedure to program any algorithm. Keep in mind that the technology is always evolving allowing some improvement and changing the methodology.
+
+\section{My own way of programming}
+It is easy to learn how to program, it is, however, less easy to teach how to program. Personally I began to learn how to program at the age of thirteen and I am still learning. My main motivation was to learn how to interface a computer and a micro-controller. Which brought me to learn how to program in C++ and in Python, to use the serial link, the network protocols, etc.
+
+\subsection{How to start}
+At first programming can look over helming but often a technical solution exist and all you need is some sheets of paper, a pen, a computer with whatever programming language and operating system but also an internet connection or some books about your programming language.
+
+What is not important is what operating system you are using and what programming language you are using. However try to find a programming language that meet the same goals as your program, i.e., Python is not adapted out of the box to be fast (it can be fast by using compiled libraries, etc.).
+
+As an advice, you should always use a \textquote{versionning} program (Git with a GitHub or a GitLab account) when programming in order to keep version of your project and in case of a big mistake, in order to revert your code.
+
+Another thing to do is to pick a good Integrated Development Environment (IDE) for your programming language. I am using Visual Studio Code (VS Code) with the Python extension and a stable version of Python. VS Code is amazing because it allows you to change the Python version easily (not a big deal if you know how to use the terminal), but most importantly it provide an auto-completion engine (that's a deal breaker for all the programmers). Please do not use the Python default IDE (it is not meant for sustainable programming). VS Code is also bonded with Git which is a big advantage.
+
+Most of the time any beginner tutorial will help you to learn how to use the language you are looking for.
+
+If you don't know what you are going to do, don't do it. Especially if you are writing, moving or deleting files. Same apply if you are using the network. As for a driver a programmer has to be in control of his machine. You can also use virtual environments or a virtual machine to limit the effect of your program on your machine.
+
+As for everything, programming needs practice.
+
+\subsection{How to approach a project}
+First, look for the state-of-the-art. It does not mean that you will find exactly what you are looking for but you will get the current state of the technology which will improve your vision of your project.
+
+Second, if you did not find exactly what you are looking for, draw a scheme of your algorithm. It will give you a raw idea of your program of what kind of object you need to use, which number of functions, etc. If you did find exactly what you need ensure yourself that you can legally use it and if yes, you can proceed to test it.
+
+Third, try to use the norms. For example always starting your class name with a upper case letter. Your variables with a lower case letter. The function name with a lower letter. Your constants in upper case. Always give meaningful name to your variable. The auto-completion is there to help you to complete your code faster anyway, so make your code readable by the human, the machine doesn't care.
+
+Fourth, test and debug. For a professional program you have to decompose your program in atomic snippet of code and to implement test cases (unitary and recursive testing). You can implement it but the important is to test your program. I was virtually never able to write an error free program without testing it step by step. Always think of a way of debugging your code (log files, debugging tool of your IDE).
+
+Fifth, document your code. In any case the comments are always useful if they give useful information (description of the algorithm, description of the usage of the function, todo list, current progress, summary of the goal of the program, change log, etc.).
+
+Sixth, less is more. Always implement the minimally viable algorithm, not all the possible variation at the same time. It is a principle of business (lean canvas method) where the options are not important, but the main functionality has to be implemented.
+
+Seventh, always research before asking a question. We are living in an era where all the information are easily accessible (books, internet, experts, etc.). If you don't know of what you are talking you should first fetch some information to understand how to formulate properly your question. Also if you are looking for the answer you will probably find it and if not your question will be interesting for you and the other (it is the principle of some platform like Stack Overflow).
+
+\section{An example with Python}
+Here is an example of how I would program a code that allows to wrap the print function in order
+
+\begin{pyblock}[][breaklines]
+"""
+This is an example that shows how I program.
+The aim of this program is to wrap the print function in a class.
+"""
+
+class Print:
+	def __init__(self, functor=print):
+		""" Initialise the Print object
+			Args:
+				functor:
+				function used to write or to print a string, by default the print function is used.
+			Returns:
+			none.
+		"""
+		self.functor = functor
+		
+	def original(self, *args, **kwargs):
+		""" Use the functor to print/write the original text (string)
+			args:
+				text:
+				the text to print/write
+
+				kwargs:
+				the additional options
+			Returns:
+			none:			
+		"""
+		self.functor(*args, **kwargs)
+	
+	def lower(self, *args, **kwargs):
+		""" Use the functor to print/write a lower case text (string)
+			Args:
+				args:
+				the text to print/write
+
+				kwargs:
+				the additional options
+			Returns:
+			none:	
+		"""
+		sep = " "
+		try:
+			sep = str(kwargs['sep'])
+		except:
+			pass
+
+		self.functor((sep.join(map(str, args))).lower(), **kwargs)
+		
+	def upper(self, *args, **kwargs):
+		""" Use the functor to print/write a upper case text (string)
+			Args:
+				args:
+				the text to print/write
+
+				kwargs:
+				the additional options
+			Returns:
+			none:	
+		"""
+		sep = " "
+		try:
+			sep = str(kwargs['sep'])
+		except:
+			pass
+
+		self.functor((sep.join(map(str, args))).upper(), **kwargs)
+		
+if __name__ == "__main__":
+	# The previous if statement allows to execute the code only if we are using it as the main program.
+	
+	# Tests
+	my_print = Print()
+	
+	# Print.original()
+	my_print.original("Original", end="\n\r")
+	
+	# Print.lower()
+	my_print.lower("Lower", end="\n\r")
+	
+	# Print.upper()
+	my_print.upper("Upper", "lower?", end="\n\r", sep='\t')
+\end{pyblock}
+
+%\vskip 1 cm
+
+Which will give:
+
+%\vskip 1 cm
+
+\textquote{\printpythontex}
+
+\section{Design of experiments algorithm}
+% Add calculus and code
+% Reference to the pdfs
+
+
+\subsection{Requirements}
+% Needed modules
+In order to be able to use the Python module the following modules are needed:
+
+\begin{description}
+\item[scikit] for the statistics
+\item[numpy] for the math (matrix dot product, etc.)
+\item[matplotlib] for the plots
+\end{description}
+
+On Windows the modules can be installed using the following command:
+\begin{pyverbatim}
+py -m pip install scikit numpy matplotlib
+\end{pyverbatim}
+
+\subsection{Algorithm}
+The code is based on the two factorial design of experiments. It consist in resolving the following relation:
+
+\begin{align*}
+\hat{\underline{a}} = \left(X^T X\right)^{-1} X^T \underline{y}
+\end{align*}
+
+\noindent Where: 
+
+\begin{description}
+\item[$\hat{\underline{a}}$] is a vector of coefficients (of shape $p\times 1$)
+\item[$\underline{y}$] is a vector of measures (of shape $p\times 1$)
+\item[$X^T$] is the transposed form of the matrix $T$
+\item[$\left(X^T X\right)$] is the square information matrix (of shape $p\times p$)
+\item[$\left(X^T X\right)^{-1}$] is the square dispersion matrix (of shape $p\times p$)
+\end{description}
+
+The aim is to compute the estimation of the coefficients to provide a model for the experiment. In our case the following model can be used:
+
+\begin{align*}
+y = \hat{a}_0 + \sum^n_{i=1} \hat{a}_i x_i + \sum^n_{i=1} \sum^n_{j=1} \hat{a}_{ij} x_i {x}_j + ...
+\end{align*}
+
+Therefore, when the expression of the matrix ${X}$ and the vector of measures $\underline{y}$ are known the last step is to inject them in the relation to compute the estimation of the coefficient values $\hat{\underline{a}}$. 
+
+In the code, this is achieved via the following function:\\ \pyv{gen_X(n: int = 2, perm=None, show: bool = False, return_head: bool = False)}
+
+The most important argument of the function is the size of the square matrix $X$ (\pyv{n: int}).
+
+Let's generate the matrix $X$ for a $2^n$ design with $n=3$:
+
+\begin{pyconsole}[][breaklines]
+import design_of_experiments as doe
+doe.gen_X(n=3)
+\end{pyconsole}
+
+As shown in that case $p$ is equal to $2^3=8$.
+
+\section{Graphical user interface}
+% Reference to the book
+\subsection{Requirements}
+In order to use the graphical user interface the previous modules are needed as well as the following one:
+
+\begin{description}
+\item[PyQt5] for the GUI
+\end{description}
+
+It may be useful to add the PyQt5-tools module in order to change the design of the GUI.
+
+On Windows the modules can be installed using the following command:
+\begin{pyverbatim}
+py -m pip install PyQt5 PyQt5-tools
+\end{pyverbatim}
+
+\chapter{How to use the code}
+% Link to the video and step to step tutorial
+
+\phantomsection
+\chapter*{Conclusion and analysis}
+\addcontentsline{toc}{chapter}{Conclusion}
+
+%\nocite{*}
+\printbibliography
+
+\end{document}
