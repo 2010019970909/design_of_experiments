@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 def gen_design(n: int = 2, perm=None):
     """
-    Generate the matrix for factorial design of experiments (2**n)
+    Generate the design matrix for factorial design of experiments (2**n)
 
     n: 
     The number of factors to analyse

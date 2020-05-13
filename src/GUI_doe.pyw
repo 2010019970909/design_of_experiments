@@ -22,6 +22,8 @@ import design_of_experiments as doe
 # from functools import partial
 # Import os
 import os
+# To evaluate mathematic expression in a safe manneer
+from eval_math import evaluate
 
 class MainApp(QMainWindow, Ui_Design):
     """
@@ -56,7 +58,7 @@ class MainApp(QMainWindow, Ui_Design):
         self.pushButton.setEnabled(False)
         self.pushButton.clicked.connect(self.reset_y)
         # Only generate the graphs one for each tab
-        self.to_genrated = [True, True, True]
+        self.to_genrate = [True, True, True]
         self.gen_all = True 
 
     # Intercept the key events
@@ -83,21 +85,26 @@ class MainApp(QMainWindow, Ui_Design):
     # DoubleSpinBox signals (updates the DoE table)
     @pyqtSlot("double")
     def on_n_parameters_valueChanged(self, value):
+        # Generate the tabWidgets
         self.tableWidget.setRowCount(int(2**value))
         self.tableWidget.setColumnCount(int(value))
         self.measure.setRowCount(int(2**value))
 
+        # Generate the coefficent labels
         labels = doe.gen_a_labels(n=int(value))
         self.coefficients_tab.setColumnCount(len(labels))
         self.coefficients_tab.setHorizontalHeaderLabels(labels, 12)
         self.measure.setHorizontalHeaderLabels(['$y$'], 12)
 
+        # Prepare the header to be rendered with LaTeX
         header = []
         for i in range(int(value)):
             header.append("$x_" + str(i) + "$")
 
+        # Render the header labels in LaTeX
         self.tableWidget.setHorizontalHeaderLabels(header, 12)
 
+        # Fill the tabWidget with the design
         design = doe.gen_design(int(value))
         for index, element in np.ndenumerate(design):
             if element == -1:
@@ -124,19 +131,24 @@ class MainApp(QMainWindow, Ui_Design):
 
         self.on_measure_itemChanged(None) # Check if the table is full or not
 
-    # Check the table containing the mesures in order to generate the graphs if the table is full.
+    # Check the table containing the measures in order to generate the graphs if the table is full.
     @pyqtSlot(QTableWidgetItem)
     def on_measure_itemChanged(self, item):
         n = self.measure.rowCount()
 
         if(item != None): # Check if the value is convertible to a float if the item is not None (prevent circular call)
             try:
-                float(item.text())
-            except ValueError: # If the value is not convertible we empty the item and set it as None (the set trigger this function again)
+                # Evalutate the mathematic expression (https://realpython.com/python-eval-function/)
+                result = float(evaluate(item.text()))
+
+                if (item.text() != str(result)): # Update only when needed
+                    self.measure.setItem(item.row(), item.column(), QTableWidgetItem(str(result)))
+
+            except: # If the value is not convertible we empty the item and set it as None (the set trigger this function again)
                 self.measure.setItem(item.row(), item.column(), None)
 
         self.y = []
-        for i in range(n): # Read the measured values
+        for i in range(n): # Read the measured values and check if the table is full
             if self.measure.item(i, 0) != None: # If the value exist, add it too the table
                 self.y.append(float(self.measure.item(i, 0).text()))
             else: # If the item is empty (None) return, and set some states
@@ -145,13 +157,13 @@ class MainApp(QMainWindow, Ui_Design):
                 else: # The table is not empty so the reset button is enable
                     self.pushButton.setEnabled(True)
 
-                # Disable the tabs
+                # Disable the tabs because there is not enough elements in the measurement tabWidget
                 self.tabWidget.setTabEnabled(1, False)
                 self.tabWidget.setTabEnabled(2, False)
                 self.tabWidget.setTabEnabled(3, False)
                 return
 
-        # Enable the tabs
+        # Enable the tabs (the measurement tabWidget is full)
         self.tabWidget.setTabEnabled(1, True)
         self.tabWidget.setTabEnabled(2, True)
         self.tabWidget.setTabEnabled(3, True)
@@ -188,7 +200,7 @@ class MainApp(QMainWindow, Ui_Design):
             return
         
         # Says if we have to regenerate the graphs when we will change for another tab
-        self.to_genrated = [True, True, True]
+        self.to_genrate = [True, True, True]
 
     @pyqtSlot(int)
     def on_tabWidget_currentChanged(self, index):
@@ -196,30 +208,30 @@ class MainApp(QMainWindow, Ui_Design):
         if self.gen_all:
             return
 
-        if index == 1 and self.to_genrated[0]:
+        if index == 1 and self.to_genrate[0]:
             # Generate the table of coefficient
             coef = np.dot(doe.gen_X_hat(
                 n=int(np.log2(len(self.y)))), np.array(self.y))
             doe.clear_draw(self.coef_fig.canvas)
             doe.draw_coefficents(self.coef_fig.canvas,
                                  coef, color="blue", title="")
-            self.to_genrated[0] = False
+            self.to_genrate[0] = False
 
-        elif index == 2 and self.to_genrated[1]:
+        elif index == 2 and self.to_genrate[1]:
             coef = np.dot(doe.gen_X_hat(
                 n=int(np.log2(len(self.y)))), np.array(self.y))
             doe.clear_draw(self.pareto_fig.canvas)
             doe.draw_pareto(self.pareto_fig.canvas,
                             coef, color="blue", title="")
-            self.to_genrated[1] = False
+            self.to_genrate[1] = False
 
-        elif index == 3 and self.to_genrated[2]:
+        elif index == 3 and self.to_genrate[2]:
             coef = np.dot(doe.gen_X_hat(
                 n=int(np.log2(len(self.y)))), np.array(self.y))
             doe.clear_draw(self.henry_fig.canvas)
             doe.draw_henry(self.henry_fig.canvas, coef,
                            empirical_cumulative_distribution="modified", color="blue", title="")
-            self.to_genrated[2] = False
+            self.to_genrate[2] = False
 
 
 if __name__ == "__main__":
@@ -236,8 +248,9 @@ if __name__ == "__main__":
         AppUserModelID(ctypes.cast(ctypes.byref(lpBuffer), wintypes.LPWSTR))
         appid = lpBuffer.value
         ctypes.windll.kernel32.LocalFree(lpBuffer)
-        
+    
     app = QApplication(sys.argv)
+    # Launch the main app.
     MyApplication = MainApp()
     MyApplication.show()  # Show the form
     icon_path = os.path.join(os.path.dirname(sys.argv[0]), 'ico', 'fpms.svg')
