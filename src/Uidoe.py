@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Design(object):
     def setupUi(self, Design):
         Design.setObjectName("Design")
-        Design.resize(621, 602)
+        Design.resize(622, 602)
         Design.setDockOptions(QtWidgets.QMainWindow.AllowTabbedDocks|QtWidgets.QMainWindow.AnimatedDocks)
         Design.setUnifiedTitleAndToolBarOnMac(True)
         self.centralwidget = QtWidgets.QWidget(Design)
@@ -141,8 +141,10 @@ class Ui_Design(object):
         self.verticalLayout_3.addLayout(self.horizontalLayout)
         Design.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(Design)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 621, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 622, 26))
         self.menubar.setObjectName("menubar")
+        self.menuFile = QtWidgets.QMenu(self.menubar)
+        self.menuFile.setObjectName("menuFile")
         Design.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(Design)
         self.statusbar.setObjectName("statusbar")
@@ -153,6 +155,13 @@ class Ui_Design(object):
         self.actionSave_project.setObjectName("actionSave_project")
         self.actionOpen_project = QtWidgets.QAction(Design)
         self.actionOpen_project.setObjectName("actionOpen_project")
+        self.actionOpen_a_file_csv_xls_xlsx = QtWidgets.QAction(Design)
+        self.actionOpen_a_file_csv_xls_xlsx.setObjectName("actionOpen_a_file_csv_xls_xlsx")
+        self.actionSave_in_a_file = QtWidgets.QAction(Design)
+        self.actionSave_in_a_file.setObjectName("actionSave_in_a_file")
+        self.menuFile.addAction(self.actionOpen_a_file_csv_xls_xlsx)
+        self.menuFile.addAction(self.actionSave_in_a_file)
+        self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(Design)
         self.tabWidget.setCurrentIndex(0)
@@ -181,9 +190,12 @@ class Ui_Design(object):
         item.setText(_translate("Design", "Value"))
         item = self.coefficients_tab.horizontalHeaderItem(0)
         item.setText(_translate("Design", "a_0"))
+        self.menuFile.setTitle(_translate("Design", "File"))
         self.actionSave_figures_as_PDF.setText(_translate("Design", "Save figures as PDF"))
         self.actionSave_project.setText(_translate("Design", "Save project"))
         self.actionOpen_project.setText(_translate("Design", "Open project"))
+        self.actionOpen_a_file_csv_xls_xlsx.setText(_translate("Design", "Open a file (*.csv, *.xls, *.xlsx)"))
+        self.actionSave_in_a_file.setText(_translate("Design", "Save in a file"))
 from latexqtablewidget import LaTeXQTableWidget
 from mplwidget import MPL_WIDGET
 
