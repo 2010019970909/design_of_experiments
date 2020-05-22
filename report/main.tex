@@ -75,33 +75,15 @@ urlcolor=blue,
 \addbibresource{Intercultural_relations.bib}
 
 \begin{document}
-% Setup pycode
+% Setup pythontex to be able to import other module located in other path
 \begin{pyconcode}
 import os;
 os.chdir('../')
 import sys
-sys.path.append("D:\\Vincent\\Documents\\Github\\design_of_experiments\\src")
+sys.path.append("..\\src")
 sys.path.append(os.getcwd())
 sys.path = list(set(sys.path))
 \end{pyconcode}
-
-\lstset{language=Matlab,%
-    %basicstyle=\color{red},
-    breaklines=true,%
-    morekeywords={matlab2tikz},
-    keywordstyle=\color{blue},%
-    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
-    identifierstyle=\color{black},%
-    stringstyle=\color{mylilas},
-    commentstyle=\color{mygreen},%
-    showstringspaces=false,%without this there will be a symbol in the places where there is a space
-    numbers=left,%
-    numberstyle={\tiny \color{black}},% size of the numbers
-    numbersep=9pt, % this defines how far the numbers are from the text
-    emph=[1]{for,end,break},emphstyle=[1]\color{red}, %some words to emphasise
-    %emph=[2]{word1,word2}, emphstyle=[2]{style},    
-}
-
 
 \umonsCoverPage
 
@@ -119,7 +101,7 @@ The aim of this report is to introduce quickly the theoretical basis of the Desi
 \chapter{Theory about two factorial Design of Experiments}
 Most of the following information are coming from the course book of Professor Mégret (Chapter 10 - Design of experiments).
 
-Design of experiments is a field of science that studies the theory of measurement. It aims to find an optimal way of taking and analysing the measurement. In order to limit the number of measurement to the lowest number of needed measurement as well as reducing the measurement time.
+Design of experiments is a field of science that studies the theory of measurements. It aims to find an optimal way of taking and analysing the measurements. In order to limit the number of measurement to the lowest number of needed measurement as well as reducing the measurement time.
 
 In fact we should meet the following requirement:
 
@@ -149,38 +131,39 @@ A particular case of the factorial design is the two levels factorial design ($m
 \chapter{Python implementation}
 In order implement the GUI for this project, a module has been made to compute the needed matrices for the DoE. Then the Qt tools have been used (PyQt5 and Qt Designer).
 
-The code of this project is fully available on GitHub: \url{https://github.com/2010019970909/design_of_experiments}. I am going to expose my usual procedure to program any algorithm. Keep in mind that the technology is always evolving allowing some improvement and changing the methodology.
+The code of this project is fully available on GitHub:\\ \url{https://github.com/2010019970909/design_of_experiments}.
+I am going to expose my usual procedure to program any algorithm. Keep in mind that the technology is always evolving allowing some improvements of the methodology.
 
 \section{My own way of programming}
 It is easy to learn how to program, it is, however, less easy to teach how to program. Personally I began to learn how to program at the age of thirteen and I am still learning. My main motivation was to learn how to interface a computer and a micro-controller. Which brought me to learn how to program in C++ and in Python, to use the serial link, the network protocols, etc.
 
 \subsection{How to start}
-At first programming can look over helming but often a technical solution exist and all you need is some sheets of paper, a pen, a computer with whatever programming language and operating system but also an internet connection or some books about your programming language.
+At first programming can look overwhelming but often a technical solution exists and all you need is some sheets of paper, a pen, a computer with whatever programming language and operating system but also an internet connection or some books about your programming language.
 
-What is not important is what operating system you are using and what programming language you are using. However try to find a programming language that meet the same goals as your program, i.e., Python is not adapted out of the box to be fast (it can be fast by using compiled libraries, etc.).
+What is not important is which operating system you are using and what programming language you are using. However try to find a programming language that meet the same goals as your program, i.e., Python is not adapted out of the box to be fast (it can be accelerated by using compiled libraries, etc.).
 
 As an advice, you should always use a \textquote{versionning} program (Git with a GitHub or a GitLab account) when programming in order to keep version of your project and in case of a big mistake, in order to revert your code.
 
-Another thing to do is to pick a good Integrated Development Environment (IDE) for your programming language. I am using Visual Studio Code (VS Code) with the Python extension and a stable version of Python. VS Code is amazing because it allows you to change the Python version easily (not a big deal if you know how to use the terminal), but most importantly it provide an auto-completion engine (that's a deal breaker for all the programmers). Please do not use the Python default IDE (it is not meant for sustainable programming). VS Code is also bonded with Git which is a big advantage.
+Another thing to do is to pick a good Integrated Development Environment (IDE) for your programming language. I am using Visual Studio Code (VS Code) with the Python extension and a stable version of Python. VS Code is amazing because it allows you to change the Python version easily (not a big deal if you know how to use the terminal), but most importantly it provide an auto-completion engine (that's a deal breaker for all the programmers). Please do not use the Python default IDE (it is not meant for sustainable programming). VS Code is also bonded with Git which is an other advantage.
 
-Most of the time any beginner tutorial will help you to learn how to use the language you are looking for.
+Most of the time any beginner tutorial will help you to learn how to use the language you are looking for. And they are often available for free.
 
-If you don't know what you are going to do, don't do it. Especially if you are writing, moving or deleting files. Same apply if you are using the network. As for a driver a programmer has to be in control of his machine. You can also use virtual environments or a virtual machine to limit the effect of your program on your machine.
+If you don't know what you are going to do, don't do it. Especially if you are writing, moving or deleting files. Same apply if you are using the network. As for a car driver a programmer has to be in control of his machine. You can also use virtual environments or a virtual machine to limit the effect of your program on your machine.
 
-As for everything, programming needs practice.
+As for everything skills, programming needs practice.
 
 \subsection{How to approach a project}
-First, look for the state-of-the-art. It does not mean that you will find exactly what you are looking for but you will get the current state of the technology which will improve your vision of your project.
+First, look for the state-of-the-art. It does not meant that you will find exactly what you are looking for but you will get the current state of the technology which will improve your vision of your project.
 
-Second, if you did not find exactly what you are looking for, draw a scheme of your algorithm. It will give you a raw idea of your program of what kind of object you need to use, which number of functions, etc. If you did find exactly what you need ensure yourself that you can legally use it and if yes, you can proceed to test it.
+Second, if you did not find exactly what you are looking for, draw a scheme of your algorithm. It will give you a raw idea of your program, of what kind of object you need to use, which number of functions, etc. If you did find exactly what you need ensure yourself that you can legally use it and if yes, you can proceed to test it.
 
 Third, try to use the norms. For example always starting your class name with a upper case letter. Your variables with a lower case letter. The function name with a lower letter. Your constants in upper case. Always give meaningful name to your variable. The auto-completion is there to help you to complete your code faster anyway, so make your code readable by the human, the machine doesn't care.
 
 Fourth, test and debug. For a professional program you have to decompose your program in atomic snippet of code and to implement test cases (unitary and recursive testing). You can implement it but the important is to test your program. I was virtually never able to write an error free program without testing it step by step. Always think of a way of debugging your code (log files, debugging tool of your IDE).
 
-Fifth, document your code. In any case the comments are always useful if they give useful information (description of the algorithm, description of the usage of the function, todo list, current progress, summary of the goal of the program, change log, etc.).
+Fifth, document your code. In any case the comments are always useful if they give useful information (description of the algorithms, description of the usage of the function, ToDo list, current progress, summary of the aim of the program, change log, links to resources, etc.).
 
-Sixth, less is more. Always implement the minimally viable algorithm, not all the possible variation at the same time. It is a principle of business (lean canvas method) where the options are not important, but the main functionality has to be implemented.
+Sixth, less is more. Always implement the minimally viable algorithm, not all the possible variation at the same time. It is also a method in business (lean canvas) where the options are not important, but the main functionality has to be implemented.
 
 Seventh, always research before asking a question. We are living in an era where all the information are easily accessible (books, internet, experts, etc.). If you don't know of what you are talking you should first fetch some information to understand how to formulate properly your question. Also if you are looking for the answer you will probably find it and if not your question will be interesting for you and the other (it is the principle of some platform like Stack Overflow).
 
@@ -271,17 +254,30 @@ if __name__ == "__main__":
 	my_print.upper("Upper", "lower?", end="\n\r", sep='\t')
 \end{pyblock}
 
-%\vskip 1 cm
+\vskip 1 cm
 
 Which will give:
 
-%\vskip 1 cm
+\vskip 1 cm
 
 \textquote{\printpythontex}
+
+\vskip 1 cm
+
+This kind of class can be used to easily output string in the console or to a file, with a minimal number of changes. More than that you can add your own methods. Here the code is not very complex and I did not implement a real test for each method. But for each method the aim, the arguments and the returns are given. In VS Code those information are display when you hoover on the method name later (that will help you to complete the function parameters without having to open the documentation).
+
+Also the statement \pyb{if __name__ == "__main__":} is used to unsure that the code is only executed when the program is used as the main program and not as a module. That ease the development of modules since you can test them or implement specific tools that will only be executed with a Python command like: \textquote{\pyb{py -m pip install numpy}}.
+%\include{example.py}
+%\begin{pygments}{python}
+%a = 1
+%\end{pygments}
+
+%how about \pygment{python}{a = 1}
 
 \section{Design of experiments algorithm}
 % Add calculus and code
 % Reference to the pdfs
+Before diving into the programming of the GUI, a module has been implemented with the useful functions. To achieve this goal we need some other modules and the algorithm that we intend to implement.
 
 
 \subsection{Requirements}
@@ -306,7 +302,7 @@ The code is based on the two factorial design of experiments. It consist in reso
 \hat{\underline{a}} = \left(X^T X\right)^{-1} X^T \underline{y}
 \end{align*}
 
-\noindent Where: 
+\noindent where: 
 
 \begin{description}
 \item[$\hat{\underline{a}}$] is a vector of coefficients (of shape $p\times 1$)
@@ -324,9 +320,9 @@ y = \hat{a}_0 + \sum^n_{i=1} \hat{a}_i x_i + \sum^n_{i=1} \sum^n_{j=1} \hat{a}_{
 
 Therefore, when the expression of the matrix ${X}$ and the vector of measures $\underline{y}$ are known the last step is to inject them in the relation to compute the estimation of the coefficient values $\hat{\underline{a}}$. 
 
-In the code, this is achieved via the following function:\\ \pyv{gen_X(n: int = 2, perm=None, show: bool = False, return_head: bool = False)}
+In the code, this is achieved via the following function:\\ \pyv{gen_X(n:int=2, perm=None, show:bool=False, return_head:bool=False)}
 
-The most important argument of the function is the size of the square matrix $X$ (\pyv{n: int}).
+The most important argument of the function is the changing parameters (\pyv{n: int}).
 
 Let's generate the matrix $X$ for a $2^n$ design with $n=3$:
 
@@ -335,10 +331,58 @@ import design_of_experiments as doe
 doe.gen_X(n=3)
 \end{pyconsole}
 
-As shown in that case $p$ is equal to $2^3=8$.
+As shown in that case $p$ is equal to $2^3=8$. Note that you can permute the rows using a slices object; that may help you if it is easier for you to proceed to the measurement in a specific order.
+
+When the matrix $X$ is known we can easily compute the matrix $\hat{X}$ whom I defined has followed:
+\begin{equation*}
+\hat{X} = \left(X^T X\right)^{-1} X^T
+\end{equation*}
+
+To simplify the use of this module the function \pyv{gen_X_hat()} is calling the function \pyv{gen_X()} with the same arguments.
+
+Thus we have:
+\begin{pyconsole}[][breaklines]
+X_hat  = doe.gen_X_hat(n=3)
+X_hat
+\end{pyconsole}
+
+The only remaining steps is to compute the following dot product between the previous matrix and the measures:
+
+\begin{equation*}
+\hat{\underline{a}} = \hat{X} \underline{y}
+\end{equation*}
+
+By taking the example about the Gold Jewelry example which aim to analyse the measure of two quantities under the controlled fluctuation of 3 parameters we can find the estimation of the coefficients for the 2 quantities:
+
+\begin{pyconsole}[][breaklines]
+# Speed [mg/min]
+y1 = [53, 122, 20, 125, 48, 70, 68, 134]
+# Cobalt Content [ppm]
+y2 = [4100, 3510, 3950, 1270, 4870, 2810, 7750, 3580]
+
+# Compute the coefficients
+import numpy as np
+a_hat_1 = np.dot(X_hat, y1)
+
+a_hat_2 = np.dot(X_hat, y2)
+
+a_hat_1
+
+a_hat_2
+\end{pyconsole}
+
+The results correspond to the one showed in the book (Introduction to the design of experiments).
 
 \section{Graphical user interface}
 % Reference to the book
+For the GUI, PyQt5 has been choosed (other modules or tools can be used like Tkinter or appJar). One of the main advantage of Qt (PyQt5) is the GUI designer that allows to rapidly design GUI. This is done in three main steps:
+
+\begin{itemize}
+\item design the GUI on the Qt Designer tool;
+\item convert the .ui file generated in a Python script;
+\item create a new script that will import the generated script and make the links between the main script and the GUI script.
+\end{itemize}
+
 \subsection{Requirements}
 In order to use the graphical user interface the previous modules are needed as well as the following one:
 
@@ -353,14 +397,219 @@ On Windows the modules can be installed using the following command:
 py -m pip install PyQt5 PyQt5-tools
 \end{pyverbatim}
 
-\chapter{How to use the code}
+When the tools are installed you have to find the Qt Designer executable. Then you may want to add a short-cut to it. On my computer the path to the tool is:
+\begin{pyverbatim}[][breaklines]
+'C:\Users\<username>\AppData\Local\Programs\Python\Python38\Lib\site-packages\pyqt5_tools\Qt\bin\designer.exe'
+\end{pyverbatim}
+
+\section{How to program the GUI}
+As stated before 3 steps are needed to create a GUI. A lot of information can be found on the internet. A good resource is the Qt website or the following website \url{www.learnpyqt.com/}.
+
+\subsection{First step: GUI design}
+The Qt Designer is a drag and drop tool. You have just to create your the design of your GUI, maybe change some parameters of the object for convenience, i.e., the objectName.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{full_GUI}
+\caption{Screen capture of the Qt Designer GUI\label{full_qt}}
+\end{figure}
+
+In the figure \ref{full_qt} the left panel the GUI element are available and you can drop them in the application window. The Object inspector is on the right side panel and allows you to browse through the different objects in order to change their parameters via the property editor.
+
+N.B.: At the beginning of a project you can choose the kind of GUI you want to develop. Here, it is a \textquote{Main Window} application.
+
+\clearpage
+\subsubsection{Customised Widgets}
+In this project by two times customized widgets have been used (using \pyv{mplwidget.py} and the \pyv{latexqtablewidget.py}). The first allows to use matplotlib to display charts and the second allows to render the header of the table widgets in LaTeX. In order to use them you have to configure the widgets to use specify the class name and module name. It cannot be done after because you should not modify the generated Python script in the next step.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.8\linewidth]{promote_widget}
+\caption{Promote the QTableWidget\label{fig:promote_widget}}
+\end{figure}
+
+The first step (figure \ref{fig:promote_widget}) is to open the \textquote{Promoted Widgets} window. Here we are configuring a QTableWidget and we want to add the LaTeX rendering feature.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.6\linewidth]{config_promote}
+\caption{Configure a customised QTableWidget\label{fig:config_promote}}
+\end{figure}
+
+The second step (figure \ref{fig:config_promote}) is to configure the new widgets by selecting the right base widget. Then by specifying the class name (it can be found in the header/module file of your customised widget class). And then to specify the header name without extension.
+
+\subsubsection{Add the signals and slots}
+By pressing the F4 key you can Add Signals/Slots to the objects. Personally I don't use that part of the tools and I had manually the Signals and Slots in the third step.
+
+Don't forget to save you project (as often as possible). Save all the scripts in the same source folder.
+
+\subsection{Second step: Generate the Python script for the GUI}
+We are using another Qt module to convert the .ui file generated by the Qt Designer tool. This tool will generate a Python code that will allow to create our specific layout created before. This tool is used in the \textquote{UI2PYconverter.py} script and the content of the script is the following.
+
+\begin{pyverbatim}
+# −∗− coding: utf−8 −∗−
+''' PyQt5 uic module convert ui file (XML code) into py file (Python code) '''
+from PyQt5 import uic
+
+fin = open('doe.ui', 'r')
+fout = open('Uidoe.py', 'w')
+uic.compileUi(fin, fout, execute=True)
+fin.close()
+fout.close()
+\end{pyverbatim}
+
+The script will simply convert the \textquote{doe.ui} file to the \textquote{Uidoe.py} file. You should never modify directly the Python generated file since if you want to change the GUI layout a new script will be generated.
+
+N.B.: The first line is there to specify to the interpreter the kind of encoding used for the Python script (this is not important).
+
+\subsection{Third step: Create the main code}
+Now that we have the GUI code we want to bind it with behaviours and to link signals or events to it. You will write this script in a file with a .pyw extension (it will launch the script in windowed mode, without console).
+
+\subsubsection{Minimal code}
+The \textquote{base code} for my application is the following:
+\begin{pyverbatim}[][breaklines]
+# Import PyQt Widgets for PyQt5 version
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QHeaderView
+# Import pyqtSlot to connect sliders and DoubleSpinBox signals
+from PyQt5.QtCore import pyqtSlot, Qt
+# Import QIcon
+from PyQt5.QtGui import QIcon
+# Import Ui_MainWindow class from UiMainApp.py generated by uic module
+from Uidoe import Ui_Design
+# Import os
+import os
+
+class MainApp(QMainWindow, Ui_Design):
+    """
+    MainApp class inherit from QMainWindow and from
+    Ui_MainWindow class in UiMainApp module.
+    """
+
+    def __init__(self):
+        """Constructor or the initializer"""
+        QMainWindow.__init__(self)
+        # It is imperative to call self.setupUi (self) for the interface to initialize.
+        # This is defined in Uidoe.py file automatically
+        self.setupUi(self)
+        self.setWindowTitle("Design of Experiments - by Vincent STRAGIER")
+        
+
+if __name__ == "__main__":
+    # For Windows set AppID to add an Icon in the taskbar
+    # https://stackoverflow.com/questions/1551605/how-to-set-applications-taskbar-icon-in-windows-7
+    if sys.platform == 'win32':
+        import ctypes
+        from ctypes import wintypes
+        appid = u'vincent_stragier.umons.doe.v1.0.0'  # arbitrary string
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
+
+        lpBuffer = wintypes.LPWSTR()
+        AppUserModelID = ctypes.windll.shell32.GetCurrentProcessExplicitAppUserModelID
+        AppUserModelID(ctypes.cast(ctypes.byref(lpBuffer), wintypes.LPWSTR))
+        appid = lpBuffer.value
+        ctypes.windll.kernel32.LocalFree(lpBuffer)
+    
+    app = QApplication(sys.argv)
+    # Launch the main app.
+    MyApplication = MainApp()
+    MyApplication.show()  # Show the form
+    icon_path = os.path.join(os.path.dirname(sys.argv[0]), 'ico', 'fpms.svg')
+    app.setWindowIcon(QIcon(icon_path))
+    MyApplication.setWindowIcon(QIcon(icon_path))
+    sys.exit(app.exec_())  # Execute the app
+\end{pyverbatim}
+
+This code will only display the GUI with a specific title and an icon (one on the window and one in the taskbar). In Windows you have to use that kind of trick to display the logo. Notice the use of an .svg file that allows lossless scaling and transparency (alpha layer).
+
+
+\subsubsection{Signals and slots}
+To be able to get the inputs of the user, the signals of the objects have to be connected to slots functions.
+
+First add the signal connection in the \pyv{def __init__(self):} function definition of the \pyc{MainApp} class:
+
+\begin{pyverbatim}
+self.<objecName>.<signal>.connect(self.foo)
+\end{pyverbatim}
+
+where:
+
+\begin{description}
+\item[objectName] is the name of the specific object (set by default in Qt Designer or by you)
+\item[signal] is the specific signal you want to connect (you have to look trough the documentation)
+\item[foo] is the function that will be triggered by the connected signal.
+\end{description}
+
+Second you have to define the foo function as a member of the \pyc{MainApp} class by taking into account which arguments the signal will pass to foo:
+
+\begin{pyverbatim}
+@pyqtSlot(<type>)
+def foo(self, <type>:arg):
+	pass
+\end{pyverbatim}
+where:
+
+\begin{description}
+\item[type] is the data type of the argument passed to your function foo by the signal
+\item[arg] is the argument that will be retrieved by the function foo
+\end{description}
+
+The @ symbol is there to use the function as a decorator of \pyv{pystSlot}.
+
+\subsubsection{Interact with the GUI}
+You can also use other methods to interact with the elements of you GUI. Mostly to change some value, to update a text, set default value or current value of some object, etc. There is plenty information on the internet about those methods.
+
+\chapter{How to use the GUI}
 % Link to the video and step to step tutorial
+To use the GUI you can look at my demonstration of the GUI on Youtube (\url{https://youtu.be/2I9Mx7gjNnI}).
+
+The first step is to install Python and all the required Python (see the previous chapters).
+
+The second step is to download the code from GitHub (\url{https://github.com/2010019970909/design_of_experiments}).
+
+The third step is to start the \pyv{GUI_doe.pyw} script (figure \ref{fig:doe_gui}).
+
+The fourth step is to select the number of parameter. Then to fill the $y$ column with your measurement (figure \ref{fig:doe_gui_filled}).
+
+Now you can select any chart in the tabs (figure \ref{fig:doe_gui_coef}, figure, \ref{fig:doe_gui_pareto}, or figure \ref{fig:doe_gui_henry}) and the coefficients are displayed in the bottom of the GUI. If you want to reset the $y$ column you can use the reset button. Also you can enter calculus (not only values) in the cells.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{doe_gui}
+\caption{DoE GUI\label{fig:doe_gui}}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{doe_gui_filled}
+\caption{DoE GUI - Bitumen emulsion example\label{fig:doe_gui_filled}}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{doe_gui_coef}
+\caption{DoE GUI - Coefficient chart\label{fig:doe_gui_coef}}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{doe_gui_pareto}
+\caption{DoE GUI - Pareto chart\label{fig:doe_gui_pareto}}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{doe_gui_henry}
+\caption{DoE GUI - Henry chart\label{fig:doe_gui_henry}}
+\end{figure}
 
 \phantomsection
 \chapter*{Conclusion and analysis}
 \addcontentsline{toc}{chapter}{Conclusion}
 
+This program is working but could be improved. The computing time can be quite long to render the charts. However each time the GUI or even the module implemented have been tested, the results were close (with sometime a light rounding error) to the solution of the examples. More charts could be added. Also the GUI starts computing the values when the table is completely filled what can be a little bit annoying (adding a \textquote{compute} button could solve the problem). The layout could be improved (stretching methods, etc.).
+
 %\nocite{*}
-\printbibliography
+%\printbibliography
 
 \end{document}

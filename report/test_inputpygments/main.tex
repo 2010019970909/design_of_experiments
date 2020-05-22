@@ -1,0 +1,39 @@
+\documentclass[12 pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{pythontex}
+
+\begin{document}
+
+Here's the code in the document
+\begin{pyverbatim}
+def SI(var, unit):
+     return '\\SI{' + str(var) + '}{' + unit + '}'
+\end{pyverbatim}
+and here we load it from a file
+
+\begin{pycode}[temp] 
+def import_code(filename="../temp.py"):
+    with open(filename) as fh:
+        return fh.read()
+        
+code = import_code()
+\end{pycode}
+
+\begin{pysub}[temp] 
+  \begin{pyverbatim}
+!{code}    
+  \end{pyverbatim}
+\end{pysub}
+
+\begin{pycode}[temp]
+print("Hello from Python!")
+execute(code)
+\end{pycode}
+
+and here we load it again from a file
+
+%\inputpygments{python}{{D:/Vincent/Documents/GitHub/design_of_experiments/report/test_inputpygments/temp.py}}
+
+\end{document}

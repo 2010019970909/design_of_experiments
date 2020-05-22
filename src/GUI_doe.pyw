@@ -99,7 +99,7 @@ class MainApp(QMainWindow, Ui_Design):
         # Prepare the header to be rendered with LaTeX
         header = []
         for i in range(int(value)):
-            header.append("$x_" + str(i) + "$")
+            header.append("$x_" + str(i + 1) + "$")
 
         # Render the header labels in LaTeX
         self.tableWidget.setHorizontalHeaderLabels(header, 12)
@@ -190,7 +190,8 @@ class MainApp(QMainWindow, Ui_Design):
         if self.gen_all:
             doe.clear_draw(self.coef_fig.canvas)
             doe.draw_coefficents(self.coef_fig.canvas,
-                                 coef, color="blue", title="")
+                                 coef, remove_a0=True,
+                                 color="blue", title="")
             doe.clear_draw(self.pareto_fig.canvas)
             doe.draw_pareto(self.pareto_fig.canvas,
                             coef, color="blue", title="")
