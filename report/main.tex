@@ -520,7 +520,7 @@ if __name__ == "__main__":
     sys.exit(app.exec_())  # Execute the app
 \end{pyverbatim}
 
-This code will only display the GUI with a specific title and an icon (one on the window and one in the taskbar). In Windows you have to use that kind of trick to display the logo. Notice the use of an .svg file that allows lossless scaling and transparency (alpha layer).
+This code will only display the GUI with a specific title and an icon (one on the window and one in the taskbar). In Windows you have to use that kind of trick to display the logo. Notice the use of a .svg file that allows lossless scaling and transparency (alpha layer).
 
 
 \subsubsection{Signals and slots}
@@ -563,15 +563,15 @@ You can also use other methods to interact with the elements of you GUI. Mostly 
 % Link to the video and step to step tutorial
 To use the GUI you can look at my demonstration of the GUI on Youtube (\url{https://youtu.be/2I9Mx7gjNnI}).
 
-The first step is to install Python and all the required Python (see the previous chapters).
+The first step is to install Python and all the required Python modules (see the previous chapters).
 
 The second step is to download the code from GitHub (\url{https://github.com/2010019970909/design_of_experiments}).
 
 The third step is to start the \pyv{GUI_doe.pyw} script (figure \ref{fig:doe_gui}).
 
-The fourth step is to select the number of parameter. Then to fill the $y$ column with your measurement (figure \ref{fig:doe_gui_filled}).
+The fourth step is to set the number of parameters. Then to fill the $y$ column with your measurements (figure \ref{fig:doe_gui_filled}).
 
-Now you can select any chart in the tabs (figure \ref{fig:doe_gui_coef}, figure, \ref{fig:doe_gui_pareto}, or figure \ref{fig:doe_gui_henry}) and the coefficients are displayed in the bottom of the GUI. If you want to reset the $y$ column you can use the reset button. Also you can enter calculus (not only values) in the cells.
+Now you can select any chart in the tabs (figure \ref{fig:doe_gui_coef}, figure, \ref{fig:doe_gui_pareto}, or figure \ref{fig:doe_gui_henry}) and the coefficients are displayed in the bottom of the GUI. If you want to reset the $y$ column you can use the reset button. Also you can enter mathematical expression (not only values) in the cells, i.e., $5*pi*e**3$.
 
 \begin{figure}[!ht]
 \centering
