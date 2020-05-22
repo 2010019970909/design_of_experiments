@@ -99,6 +99,20 @@
            </spacer>
           </item>
           <item>
+           <widget class="QCheckBox" name="autorun_checkBox">
+            <property name="text">
+             <string>Autorun</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="run_pushButton">
+            <property name="text">
+             <string>Run</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="pushButton">
             <property name="text">
              <string>Reset</string>
@@ -197,6 +211,16 @@
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="MPL_WIDGET" name="henry_fig" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab5">
+       <attribute name="title">
+        <string>Correlation chart</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="MPL_WIDGET" name="correlation_fig" native="true"/>
         </item>
        </layout>
       </widget>
