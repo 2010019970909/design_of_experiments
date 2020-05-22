@@ -55,8 +55,18 @@ class MainApp(QMainWindow, Ui_Design):
         self.y = list()
         # It sets up layout and widgets that are defined
         self.showMaximized()
-        self.pushButton.setEnabled(False)
+
+        # Set up the buttons
+        self.pushButton.setEnabled(False) # Disable the button
         self.pushButton.clicked.connect(self.reset_y)
+
+        self.run_pushButton.setEnabled(False)
+        self.run_pushButton.clicked.connect(self.update)
+
+        self.autorun_checkBox.setChecked(False)
+        self.autorun_checkBox.stateChanged.connect(self.update_run)
+
+
         # Only generate the graphs one for each tab
         self.to_genrate = [True, True, True]
         self.gen_all = True 
@@ -81,6 +91,22 @@ class MainApp(QMainWindow, Ui_Design):
 
         for i in range(n):
             self.measure.setItem(i, 0, QTableWidgetItem(None))
+        self.pushButton.setEnabled(False)
+
+    @pyqtSlot("int")
+    def update_run(self, state):
+        if not state:
+            # Check if the table is empty or no
+            n = self.measure.rowCount()
+
+            self.pushButton.setEnabled(False)
+            for i in range(n): # Read the measured values and check if the table is full
+                if self.measure.item(i, 0) != None:
+                    self.pushButton.setEnabled(True)
+                else: # Disable the button
+                    state = True
+
+        self.run_pushButton.setEnabled(not state)
 
     # DoubleSpinBox signals (updates the DoE table)
     @pyqtSlot("double")
@@ -115,26 +141,13 @@ class MainApp(QMainWindow, Ui_Design):
 
             item.setTextAlignment(Qt.AlignHCenter)  # change the alignment
             self.tableWidget.setItem(index[0], index[1], item)
-        
-        """
-        for x in range(2**int(value)):
-            for y in range(int(value)):
-                if design[x, y] == -1:
-                    item = QTableWidgetItem('-')  # create the item
-
-                elif design[x, y] == 1:
-                    item = QTableWidgetItem('+')  # create the item
-
-                item.setTextAlignment(Qt.AlignHCenter)  # change the alignment
-                self.tableWidget.setItem(x, y, item)
-        """
 
         self.on_measure_itemChanged(None) # Check if the table is full or not
 
     # Check the table containing the measures in order to generate the graphs if the table is full.
     @pyqtSlot(QTableWidgetItem)
     def on_measure_itemChanged(self, item):
-        n = self.measure.rowCount()
+        self.update_run(self.autorun_checkBox.isChecked())
 
         if(item != None): # Check if the value is convertible to a float if the item is not None (prevent circular call)
             try:
@@ -144,9 +157,14 @@ class MainApp(QMainWindow, Ui_Design):
                 if (item.text() != str(result)): # Update only when needed
                     self.measure.setItem(item.row(), item.column(), QTableWidgetItem(str(result)))
 
-            except: # If the value is not convertible we empty the item and set it as None (the set trigger this function again)
+            except: # If the value is not convertible we empty the item and set it as None (the 'set' trigger this function again)
                 self.measure.setItem(item.row(), item.column(), None)
 
+        if self.autorun_checkBox.isChecked():
+            self.update()
+        
+    def update(self):
+        n = self.measure.rowCount()
         self.y = []
         for i in range(n): # Read the measured values and check if the table is full
             if self.measure.item(i, 0) != None: # If the value exist, add it too the table
@@ -198,10 +216,12 @@ class MainApp(QMainWindow, Ui_Design):
             doe.clear_draw(self.henry_fig.canvas)
             doe.draw_henry(self.henry_fig.canvas, coef,
                            empirical_cumulative_distribution="modified", color="blue", title="")
+            self.run_pushButton.setEnabled(False)
             return
         
         # Says if we have to regenerate the graphs when we will change for another tab
         self.to_genrate = [True, True, True]
+        self.run_pushButton.setEnabled(False)
 
     @pyqtSlot(int)
     def on_tabWidget_currentChanged(self, index):

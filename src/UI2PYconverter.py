@@ -2,8 +2,6 @@
 ''' PyQt5 uic module convert ui file (XML code) into py file (Python code) '''
 from PyQt5 import uic
 
-fin = open('doe.ui', 'r')
-fout = open('Uidoe.py', 'w')
-uic.compileUi(fin, fout, execute=True)
-fin.close()
-fout.close()
+with open('doe.ui', 'r') as fin:
+    with open('Uidoe.py', 'w') as fout:
+        uic.compileUi(fin, fout, execute=True)

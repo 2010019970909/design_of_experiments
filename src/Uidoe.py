@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'doe.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -49,6 +49,12 @@ class Ui_Design(object):
         self.horizontalLayout_4.addWidget(self.n_parameters)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem)
+        self.autorun_checkBox = QtWidgets.QCheckBox(self.tab1)
+        self.autorun_checkBox.setObjectName("autorun_checkBox")
+        self.horizontalLayout_4.addWidget(self.autorun_checkBox)
+        self.run_pushButton = QtWidgets.QPushButton(self.tab1)
+        self.run_pushButton.setObjectName("run_pushButton")
+        self.horizontalLayout_4.addWidget(self.run_pushButton)
         self.pushButton = QtWidgets.QPushButton(self.tab1)
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout_4.addWidget(self.pushButton)
@@ -156,6 +162,8 @@ class Ui_Design(object):
         _translate = QtCore.QCoreApplication.translate
         Design.setWindowTitle(_translate("Design", "MainWindow"))
         self.enter_parameter_label.setText(_translate("Design", "Enter the number of parameters (1≤):"))
+        self.autorun_checkBox.setText(_translate("Design", "Autorun"))
+        self.run_pushButton.setText(_translate("Design", "Run"))
         self.pushButton.setText(_translate("Design", "Reset"))
         self.tableWidget.setSortingEnabled(False)
         item = self.tableWidget.horizontalHeaderItem(0)
