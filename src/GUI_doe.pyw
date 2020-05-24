@@ -24,11 +24,12 @@ import design_of_experiments as doe
 import os
 # To evaluate mathematic expression in a safe manneer
 from eval_math import evaluate
-# Import csv and panda to be able to parse csv and 
+# Import csv and panda to be able to parse csv and
 import csv
 import pandas as pd
 # To secure the fill of the table widget from a file
 from multiprocessing import Lock
+
 
 class MainApp(QMainWindow, Ui_Design):
     """
@@ -42,7 +43,8 @@ class MainApp(QMainWindow, Ui_Design):
         # It is imperative to call self.setupUi (self) for the interface to initialize.
         # This is defined in design.py file automatically
         self.setupUi(self)
-        self.setWindowTitle("Design of Experiments - by Vincent STRAGIER (ready)")
+        self.setWindowTitle(
+            "Design of Experiments - by Vincent STRAGIER (ready)")
 
         # Add a lock to wait for the end of the refreshing
         self.refreshing = Lock()
@@ -64,7 +66,7 @@ class MainApp(QMainWindow, Ui_Design):
         self.showMaximized()
 
         # Set up the buttons
-        self.pushButton.setEnabled(False) # Disable the button
+        self.pushButton.setEnabled(False)  # Disable the button
         self.pushButton.clicked.connect(self.reset_y)
 
         self.run_pushButton.setEnabled(False)
@@ -75,6 +77,7 @@ class MainApp(QMainWindow, Ui_Design):
 
         # Add the open file and save file options
         self.actionOpen_a_file_csv_xls_xlsx.triggered.connect(self.open_file)
+        self.actionSave_in_a_file.triggered.connect(self.save_file)
 
         # Only generate the graphs one for each tab
         self.to_genrate = [True, True, True]
@@ -122,18 +125,18 @@ class MainApp(QMainWindow, Ui_Design):
 
         if not state:
             self.pushButton.setEnabled(False)
-            for i in range(n): # Read the measured values and check if the table is full
+            for i in range(n):  # Read the measured values and check if the table is full
                 if self.measure.item(i, 0) != None:
                     self.pushButton.setEnabled(True)
-                else: # Disable the button
+                else:  # Disable the button
                     state = True
-        
+
         size = 0
         for i in range(n):
             if self.measure.item(i, 0) != None:
                 self.pushButton.setEnabled(True)
                 size += 1
-        
+
         if size == n:
             self.update()
 
@@ -176,52 +179,56 @@ class MainApp(QMainWindow, Ui_Design):
             item.setTextAlignment(Qt.AlignHCenter)  # change the alignment
             self.tableWidget.setItem(index[0], index[1], item)
 
-        self.refreshing.release()        
-        self.on_measure_itemChanged(None) # Check if the table is full or not
+        self.refreshing.release()
+        self.on_measure_itemChanged(None)  # Check if the table is full or not
 
     # Check the table containing the measures in order to generate the graphs if the table is full.
     @pyqtSlot(QTableWidgetItem)
     def on_measure_itemChanged(self, item):
         self.refreshing.acquire()
-        self.update_run(self.autorun_checkBox.isChecked())
-
-        if(item != None): # Check if the value is convertible to a float if the item is not None (prevent circular call)
+        if(item != None):  # Check if the value is convertible to a float if the item is not None (prevent circular call)
             try:
                 # Evalutate the mathematic expression (https://realpython.com/python-eval-function/)
                 result = float(evaluate(item.text()))
 
-                if (item.text() != str(result)): # Update only when needed
+                if (item.text() != str(result)):  # Update only when needed
                     self.refreshing.release()
-                    self.measure.setItem(item.row(), item.column(), QTableWidgetItem(str(result)))
+                    self.measure.setItem(
+                        item.row(), item.column(), QTableWidgetItem(str(result)))
                     self.refreshing.acquire()
 
-            except: # If the value is not convertible we empty the item and set it as None (the 'set' trigger this function again)
+            # If the value is not convertible we empty the item and set it as None (the 'set' trigger this function again)
+            except:
                 self.refreshing.release()
                 self.measure.setItem(item.row(), item.column(), None)
                 self.refreshing.acquire()
 
+        self.update_run(self.autorun_checkBox.isChecked())
+
         if self.autorun_checkBox.isChecked():
             self.update()
-        
+
         self.refreshing.release()
 
-        
     def update(self):
-        self.setWindowTitle("Design of Experiments - by Vincent STRAGIER (busy)")
+        self.setWindowTitle(
+            "Design of Experiments - by Vincent STRAGIER (busy)")
         n = self.measure.rowCount()
         self.y = []
-        for i in range(n): # Read the measured values and check if the table is full
-            if self.measure.item(i, 0) != None: # If the value exist, add it too the table
+        for i in range(n):  # Read the measured values and check if the table is full
+            # If the value exist, add it too the table
+            if self.measure.item(i, 0) != None:
                 self.y.append(float(self.measure.item(i, 0).text()))
-            else: # If the item is empty (None) return, and set some states
-                if len(self.y) == 0: # The table is empty so the reset button is disable
+            else:  # If the item is empty (None) return, and set some states
+                if len(self.y) == 0:  # The table is empty so the reset button is disable
                     self.pushButton.setEnabled(False)
-                else: # The table is not empty so the reset button is enable
+                else:  # The table is not empty so the reset button is enable
                     self.pushButton.setEnabled(True)
 
                 # Disable the tabs because there is not enough elements in the measurement tabWidget
                 self.setDisabled(state=True)
-                self.setWindowTitle("Design of Experiments - by Vincent STRAGIER (ready)")
+                self.setWindowTitle(
+                    "Design of Experiments - by Vincent STRAGIER (ready)")
                 return
 
         # Enable the tabs (the measurement tabWidget is full)
@@ -235,7 +242,8 @@ class MainApp(QMainWindow, Ui_Design):
         # Display the coefficients (labels and values)
         self.coefficients_tab.setRowCount(1)
         self.coefficients_tab.setColumnCount(len(labels))
-        self.coefficients_tab.setHorizontalHeaderLabels(labels, 12) # Use the LaTeX renderer
+        self.coefficients_tab.setHorizontalHeaderLabels(
+            labels, 12)  # Use the LaTeX renderer
 
         for i in range(len(labels)):
             try:
@@ -258,13 +266,15 @@ class MainApp(QMainWindow, Ui_Design):
             doe.draw_henry(self.henry_fig.canvas, coef,
                            empirical_cumulative_distribution="modified", color="blue", title="")
             self.run_pushButton.setEnabled(False)
-            self.setWindowTitle("Design of Experiments - by Vincent STRAGIER (ready)")
+            self.setWindowTitle(
+                "Design of Experiments - by Vincent STRAGIER (ready)")
             return
-        
+
         # Says if we have to regenerate the graphs when we will change for another tab
         self.to_genrate = [True, True, True]
         self.run_pushButton.setEnabled(False)
-        self.setWindowTitle("Design of Experiments - by Vincent STRAGIER (ready)")
+        self.setWindowTitle(
+            "Design of Experiments - by Vincent STRAGIER (ready)")
 
     @pyqtSlot(int)
     def on_tabWidget_currentChanged(self, index):
@@ -307,10 +317,11 @@ class MainApp(QMainWindow, Ui_Design):
         dialog.setAcceptMode(QFileDialog.AcceptOpen)
         dialog.setDirectory(path)
         dialog.setFileMode(QFileDialog.ExistingFile)
-        # Filetype: 
+        # Filetype:
         # http://justsolve.archiveteam.org/wiki/NII
         # https://stackoverflow.com/a/27994762
-        filters = ["Coma-separated values (*.csv)", "Excel file (*.xls *.xlsx)", "All Files (*)"]
+        filters = [
+            "Coma-separated values (*.csv)", "Excel file (*.xls *.xlsx)", "All Files (*)"]
         dialog.setNameFilters(filters)
         dialog.selectNameFilter(filters[0])
         dialog.setOption(QFileDialog.ShowDirsOnly, False)
@@ -319,10 +330,10 @@ class MainApp(QMainWindow, Ui_Design):
         if dialog.exec_() == QFileDialog.Accepted:
             if dialog.selectedFiles()[0].endswith('.csv'):
                 self.open_csv(dialog.selectedFiles()[0])
-            elif dialog.selectedFiles()[0].endswith('.xls') or  dialog.selectedFiles()[0].endswith('.xlsx'):
+            elif dialog.selectedFiles()[0].endswith('.xls') or dialog.selectedFiles()[0].endswith('.xlsx'):
                 self.open_xls(dialog.selectedFiles()[0])
 
-    def open_csv(self, filename:str):
+    def open_csv(self, filename: str):
         """ We assume that the separator is a ','
             We assume that the measurement are in a column
             We assume that the header is either an empty row or filled with string
@@ -331,13 +342,14 @@ class MainApp(QMainWindow, Ui_Design):
         delimiter = ","
         quotechar = None
         with open(file=filename, newline='') as csvfile:
-            csv_reader = csv.reader(csvfile, delimiter=delimiter, quotechar=quotechar)
+            csv_reader = csv.reader(
+                csvfile, delimiter=delimiter, quotechar=quotechar)
             data = [row for row in csv_reader]
         self.select_data(np.array(data))
         #print("open csv")
 
-    def open_xls(self, filename:str):
-        """ Select the page
+    def open_xls(self, filename: str):
+        """ Open the file and select the page
         """
         #print("open xls or xlsx")
         data = pd.read_excel(filename)
@@ -348,8 +360,8 @@ class MainApp(QMainWindow, Ui_Design):
         """
         column = 0
         row = 0
-        orientation = 0 # vertical, 1 horizontal
-        
+        orientation = 0  # vertical, 1 horizontal
+
         """
         if excel:
             print([try_float(element) for element in data[:, column]])
@@ -363,13 +375,15 @@ class MainApp(QMainWindow, Ui_Design):
         """
 
         if not orientation:
-            data = [try_float(element) for element in data[:, column] if type(try_float(element)) == float]
+            data = [try_float(element) for element in data[:, column] if type(
+                try_float(element)) == float]
 
         else:
-            data = [try_float(element) for element in data[row, :] if type(try_float(element)) == float]
+            data = [try_float(element) for element in data[row, :]
+                    if type(try_float(element)) == float]
 
+        print(data)
         n = int(np.log2(len(data)))
-        # print(n)
 
         self.n_parameters.setValue(n)
 
@@ -377,11 +391,35 @@ class MainApp(QMainWindow, Ui_Design):
         self.refreshing.acquire()
         self.refreshing.release()
 
-        # print(data)
-        
         for i in range(int(2**n)):
-            # print(data[i])
             self.measure.setItem(i, 0, QTableWidgetItem(str(data[i])))
+
+    def save_file(self): # Needs openpyxl
+        """ Save the project in a file (.csv or .xls[x])
+        """
+        # path = os.path.join(os.path.dirname(sys.argv[0]))
+        # QFileDialog.getSaveFileName(parent=self, caption="Save file", dir=path, filter="*.xlsx", selectedFilter=".csv", options=QFileDialog.Options())
+        filename = QFileDialog.getSaveFileName(parent=self, caption="Save file", filter="Excel file (*.xlsx);;Excel file (*.xls);;Coma-separated values (*.csv);;All Files (*)", options=QFileDialog.Options())[0]
+        
+        # Get measures
+        n_measures = len(self.y)
+        coef = np.dot(doe.gen_X_hat(n=int(np.log2(n_measures))), np.array(self.y))
+        n_coef = len(coef)
+
+        data = [['measures (y)','coefficients (x_i)']]
+        for i in range(max(n_measures, n_coef)):
+            data.append([self.y[i] if i < n_measures else '', coef[i] if i < n_coef else ''])
+
+        if filename.endswith('.xlsx') or filename.endswith('.xls'):
+            df = pd.DataFrame(data)
+            with pd.ExcelWriter(filename) as writer:
+                df.to_excel(writer, sheet_name='Sheet_1', header=None, index=False)
+
+        elif filename.endswith('.csv'):
+            with open(filename, 'w', newline='') as csvfile:
+                spamwriter = csv.writer(csvfile, delimiter=',',  quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                for row in data:
+                    spamwriter.writerow(row)
 
 
 def try_float(element):
@@ -397,9 +435,10 @@ def try_float(element):
     try:
         if type(element) == int or type(element) == float:
             return float(element)
-        return float(evaluate(element))
+        return float(evaluate(str(element)))
     except:
         return element
+
 
 if __name__ == "__main__":
     # For Windows set AppID to add an Icon in the taskbar
@@ -415,7 +454,7 @@ if __name__ == "__main__":
         AppUserModelID(ctypes.cast(ctypes.byref(lpBuffer), wintypes.LPWSTR))
         appid = lpBuffer.value
         ctypes.windll.kernel32.LocalFree(lpBuffer)
-    
+
     app = QApplication(sys.argv)
     # Launch the main app.
     MyApplication = MainApp()
