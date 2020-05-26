@@ -318,7 +318,6 @@ class MainApp(QMainWindow, Ui_Design):
         dialog.setDirectory(path)
         dialog.setFileMode(QFileDialog.ExistingFile)
         # Filetype:
-        # http://justsolve.archiveteam.org/wiki/NII
         # https://stackoverflow.com/a/27994762
         filters = [
             "Coma-separated values (*.csv)", "Excel file (*.xls *.xlsx)", "All Files (*)"]
