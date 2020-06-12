@@ -1,0 +1,219 @@
+\documentclass[compress, english, aspectratio=169]{beamer}
+
+\usepackage{pythontex} % To run Python code
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+%\usepackage{graphicx}
+\graphicspath{{images/}}
+
+\usepackage[scheme=plain]{ctex} % To display Chinese characters
+
+\usetheme[navigation]{UMONS}
+%\usetheme[navigation, no-subsection, no-totalframenumber]{UMONS}
+
+\newcommand{\IR}{\mathbb{R}}
+
+%% Presentation information
+\title{Industrial Instrumentation: Design of Experiments}
+\subtitle{GUI project with Python and PyQt5}
+\author[V. \textsc{Stragier}]{Vincent \textsc{Stragier}}
+\date{16th of June}
+\institute[| FPMs]{%
+  Polytechnic Faculty of Mons\\
+  University of  Mons
+  \\[2ex]
+  \includegraphics[height=6ex]{LOGO_UMONS_EN}\hspace{2em}
+  \includegraphics[height=6ex]{LOGO_FPMs}
+}
+
+\begin{document}
+% Setup pythontex to be able to import another module located in other path
+\begin{pyconcode}
+import os;
+os.chdir('../')
+import sys
+sys.path.append("..\\src")
+sys.path.append(os.getcwd())
+sys.path = list(set(sys.path))
+\end{pyconcode}
+
+%% Title
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%% Table of content
+\begin{frame}
+  \tableofcontents
+\end{frame}
+
+%% Proverb
+\begin{frame}
+\frametitle{Chinese proverb}
+\begin{block}{读万卷书不如行万里路。(Dú wànjuànshū bù rú xíng wànlǐlù)}
+It's better to walk thousands of miles than to read thousands of books.
+\end{block}
+\end{frame}
+
+%% Theory
+\section{Theory about the 2 factorial Design of Experiments}
+\subsection{Factorial design}
+\begin{frame}
+\frametitle{Factorial design}
+\begin{block}{Goals}
+\begin{itemize}
+\item efficient measurement:
+\begin{itemize}
+\item quickly arrive at the best possible results
+\item omit unnecessary trials
+\item give results with the lowest uncertainty
+\item progress without failure
+\item establish a model for the studied phenomenon
+\item discover the optimal solution
+\end{itemize}
+\end{itemize}
+\end{block}
+
+\begin{equation}
+m = m_0^{n}
+\end{equation}
+
+where $m$ is the number of measurements, $m_0$ is the number of levels and $n$ is the number of factors that you want to adjust. For the program $m_0=2$ is assumed. It will define the number of measurements to take in the experimental space.
+\end{frame}
+
+\section{Python implementation}
+\subsection{How to program}
+\begin{frame}
+\frametitle{How to program}
+\begin{block}{Setup}
+\begin{itemize}
+\item sheets of paper and pen;
+\item book(s) or internet connexion;
+\item a computer;
+\item an IDE.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{How to program}
+\begin{block}{Methodology}
+\begin{itemize}
+\item up-to-date state-of-the-art;
+\item scheme of your program;
+\item use the classical naming standards;
+\item testing and debugging method;
+\item document your code;
+\item implement the minimal functions first;
+\item do your research before asking anything.
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+\subsection{Core functions}
+\subsubsection{Algorithm}
+\begin{frame}
+\frametitle{Core functions}
+\framesubtitle{Algorithm}
+\begin{align*}
+\hat{\underline{a}} = \left(X^T X\right)^{-1} X^T \underline{y}
+\end{align*}
+
+\noindent where: 
+
+\begin{description}
+\item[$\hat{\underline{a}}$] is a vector of coefficients (of shape $p\times 1$)
+\item[$\underline{y}$] is a vector of measures (of shape $p\times 1$)
+\item[$X^T$] is the transposed form of the matrix $T$
+\item[$\left(X^T X\right)$] is the square information matrix (of shape $p\times p$)
+\item[$\left(X^T X\right)^{-1}$] is the square dispersion matrix (of shape $p\times p$)
+\end{description}
+\end{frame}
+
+\subsubsection{Aim}
+\begin{frame}
+\frametitle{Core functions}
+\framesubtitle{Aim}
+The aim is to compute the estimation of the coefficients to provide a model for the experiment. In our case the following model can be used:
+
+\begin{align*}
+y = \hat{a}_0 + \sum^n_{i=1} \hat{a}_i x_i + \sum^n_{i=1} \sum^n_{j=1} \hat{a}_{ij} x_i {x}_j + ...
+\end{align*}
+
+To ease the resolution of the coefficients, $\hat{X}$ is defined as followed:
+\begin{equation*}
+\hat{X} = \left(X^T X\right)^{-1} X^T
+\end{equation*}
+\end{frame}
+
+\subsubsection{Console full example}
+\begin{frame}[fragile]
+\frametitle{Core functions}
+\framesubtitle{Console full example}
+\begin{pyconsole}
+import design_of_experiments as doe
+X_hat = doe.gen_X_hat(n=3)
+X_hat
+\end{pyconsole}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Core functions}
+\framesubtitle{Console full example (continued)}
+\begin{pyconsole}
+# Speed [mg/min]
+y1 = [53, 122, 20, 125, 48, 70, 68, 134]
+# Cobalt Content [ppm]
+y2 = [4100, 3510, 3950, 1270, 4870, 2810, 7750, 3580]
+# Compute the coefficients
+import numpy as np
+a_hat_1 = np.dot(X_hat, y1)
+a_hat_2 = np.dot(X_hat, y2)
+a_hat_1
+a_hat_2
+\end{pyconsole}
+\end{frame}
+
+\subsection{GUI programming}
+\begin{frame}
+\frametitle{GUI programming}
+\begin{block}{Main steps}
+\begin{itemize}
+\item design the GUI on the Qt Designer tool
+\item convert the .ui file generated in a Python script
+\item create a new script that will import the generated script and make the links between the main script and the GUI script
+\end{itemize}
+\end{block}
+\end{frame}
+
+\section{Demonstration}
+\subsection{Requirements}
+\begin{frame}
+\frametitle{Requirements}
+\begin{block}{Program and modules}
+\begin{itemize}
+\item Python 3.8.0 or above
+\item the source code (\url{https://github.com/2010019970909/design_of_experiments})
+\item any working LaTeX installation
+\item Python modules:\\
+\begin{description}
+\item[scikit] for the statistics
+\item[numpy] for the math (matrix dot product, etc.)
+\item[matplotlib] for the plots
+\item[PyQt5] for the GUI
+\item[PyQt5-tools] to further development
+\end{description}
+\end{itemize}
+\end{block}
+
+\pyb{py -3.8 -m pip install --upgrade sklearn numpy matplotlib PyQt5 PyQt5-tools}
+\end{frame}
+
+
+\end{document}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
