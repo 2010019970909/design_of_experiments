@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amssymb}
 %\usepackage{graphicx}
+\usepackage{csquotes}
 \graphicspath{{images/}}
 
 \usepackage[scheme=plain]{ctex} % To display Chinese characters
@@ -19,7 +20,7 @@
 \author[V. \textsc{Stragier}]{Vincent \textsc{Stragier}}
 \date{16th of June}
 \institute[| FPMs]{%
-  Polytechnic Faculty of Mons\\
+  Faculty of Engineering\\
   University of  Mons
   \\[2ex]
   \includegraphics[height=6ex]{LOGO_UMONS_EN}\hspace{2em}
@@ -176,9 +177,10 @@ a_hat_2
 \end{pyconsole}
 \end{frame}
 
-\subsection{GUI programming}
+\subsection{GUI programming (baselines)}
 \begin{frame}
-\frametitle{GUI programming}
+\frametitle{GUI programming (baselines)}
+In the frame of this project, I have used the book \textit{Understanding Optics with Python, Vasudevan Lakshminarayanan, Hassen Ghalila, Ahmed Ammar, and L. Srinivasa Varadharajan,  CRC Press, 2018}.
 \begin{block}{Main steps}
 \begin{itemize}
 \item design the GUI on the Qt Designer tool
@@ -186,6 +188,7 @@ a_hat_2
 \item create a new script that will import the generated script and make the links between the main script and the GUI script
 \end{itemize}
 \end{block}
+Useful resource: \url{www.learnpyqt.com/}
 \end{frame}
 
 \section{Demonstration}
@@ -207,13 +210,46 @@ a_hat_2
 \end{description}
 \end{itemize}
 \end{block}
-
 \pyb{py -3.8 -m pip install --upgrade sklearn numpy matplotlib PyQt5 PyQt5-tools}
 \end{frame}
 
+\subsection{Live demo or video}
+\begin{frame}
+\frametitle{Live demo or video}
+\begin{block}{Video}
+\url{https://youtu.be/2I9Mx7gjNnI}
+\end{block}
+\end{frame}
 
+\section{conclusion}
+\begin{frame}
+\frametitle{Conclusion}
+\begin{block}{Features}
+\begin{itemize}
+\item minimal module for DoE
+\item GUI:
+\begin{itemize}
+\item input up to $2^8$ measures
+\item plot charts (coefficients, Pareto, Henry)
+\item save the result in a file (.csv or .xls(x))
+\item open a file to compute the results
+\item evaluation of mathematical expression in the input
+\end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusion (continued)n}
+\begin{block}{Improvements}
+\begin{itemize}
+\item add an interpolation engine (knowing the limits of the experimental space)
+\item add the possibility of studying multiple quantities at once
+\item add more charts to enhance the coefficients analyse
+\item create a better import tool for the files
+\item improve the design of the GUI
+\item improve the runtime if possible
+\end{itemize}
+\end{block}
+\end{frame}
 \end{document}
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: t
-%%% End: 
