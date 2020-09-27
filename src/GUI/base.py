@@ -49,7 +49,7 @@ if __name__ == "__main__":
     # Launch the main app.
     MyApplication = MainApp()
     MyApplication.show()  # Show the form
-    icon_path = os.path.join(os.path.dirname(sys.argv[0]), 'ico', 'fpms.svg')
+    icon_path = os.path.join(os.path.dirname(sys.argv[0]),'..', 'ico', 'fpms.svg')
     app.setWindowIcon(QIcon(icon_path))
     MyApplication.setWindowIcon(QIcon(icon_path))
     sys.exit(app.exec_())  # Execute the app

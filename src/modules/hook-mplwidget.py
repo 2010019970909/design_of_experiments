@@ -1,0 +1,1 @@
+hiddenimports = ["PyQt5.QtWidgets.QSizePolicy", "PyQt5.QtWidgets.QWidget", "PyQt5.QtWidgets.QVBoxLayout", "matplotlib.backends.backend_qt5agg.FigureCanvasQTAgg", " matplotlib.backends.backend_qt5.NavigationToolbar2QT", "matplotlib.figure.Figure", "matplotlib.rcParams"]

@@ -4,6 +4,8 @@ Implemantation of a GUI for the DoE.
 """
 # Import PyQt Widgets for PyQt5 version
 import sys
+sys.path.append('./modules')
+sys.path.append('./GUI')
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QHeaderView, QFileDialog
 # Import pyqtSlot to connect sliders and DoubleSpinBox signals
 from PyQt5.QtCore import pyqtSlot, Qt
@@ -29,6 +31,12 @@ import csv
 import pandas as pd
 # To secure the fill of the table widget from a file
 from multiprocessing import Lock
+
+""" You can generate an executable of this script with the following command and pyinstaller
+
+pyinstaller.exe --onefile .\GUI_doe.pyw -w -n 'Design of Experiments' --clean --icon=/ico/fpms.svg --exclude PySide2
+pyinstaller.exe --onefile .\GUI_doe.pyw -w -n 'Design of Experiments' --clean --icon=ico\fpms.svg 
+"""
 
 
 class MainApp(QMainWindow, Ui_Design):

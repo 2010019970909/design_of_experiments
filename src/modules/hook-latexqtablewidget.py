@@ -1,0 +1,1 @@
+hiddenimports = ["sys", "matplotlib" "functools.partial", "matplotlib.figure.Figure", "matplotlib.backends.backend_agg.FigureCanvasAgg", "PyQt5.QtGui", "PyQt5.QtCore", "PyQt5.QtWidgets"]

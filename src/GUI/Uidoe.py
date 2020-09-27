@@ -6,6 +6,9 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(sys.argv[0], "..", "..", "modules")))
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 

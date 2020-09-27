@@ -4,6 +4,8 @@ the Design of experiments (DoE) workflow.
 """
 __author__ = "Vincent STRAGIER"
 
+# /!\ https://github.com/pyinstaller/pyinstaller/issues/5004
+
 # Maths modules
 from itertools import permutations, combinations
 from scipy.special import erfinv
@@ -651,3 +653,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    input()

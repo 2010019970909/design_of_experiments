@@ -1,0 +1,1 @@
+hiddenimports = ["itertools.permutations", "itertools.combinations", "scipy.special.erfinv", "numpy", "matplotlib.pyplot"]
